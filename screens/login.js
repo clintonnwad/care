@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Alert, Button } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import AppTextInput from '../components/AppInputField';
 import AppButton from '../components/AppButton';
 
-function login(props) {
+function Login(props) {
     const [emailAdd, setEmailAdd] = useState('');
     const [password, setPassword] = useState('');
 
     const btnLogin = (e) => {
-        if( emailAdd == "App@test.com" && password == "welcome" ){
-            // Navigate to app home
-            props.navigation.navigate('AppHome')
-        }
-        else{
-            Alert.alert("Wrong Username or Password")
-        }
+        // if( emailAdd == "App@test.com" && password == "welcome" ){
+        //     // Navigate to app home
+        //     props.navigation.navigate('AppHome')
+        // }
+        // else{
+        //     Alert.alert("Wrong Username or Password")
+        // }
+
+        props.navigation.navigate('AppHome')
         
     }
 
@@ -98,4 +100,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default login;
+export default Login;

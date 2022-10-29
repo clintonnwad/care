@@ -1,6 +1,6 @@
 import React from 'react';
 
-function addTestResult(props) {
+function AddTestResult(props) {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function addTestResult(props) {
     );
 }
 
-export default addTestResult;
+export default AddTestResult;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function patientDetails(props) {
+function PatientDetails(props) {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function patientDetails(props) {
     );
 }
 
-export default patientDetails;
+export default PatientDetails;

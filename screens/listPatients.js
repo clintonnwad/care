@@ -1,6 +1,6 @@
 import React from 'react';
 
-function listPatients(props) {
+function ListPatients(props) {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function listPatients(props) {
     );
 }
 
-export default listPatients;
+export default ListPatients;
