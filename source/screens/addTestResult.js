@@ -1,10 +1,11 @@
 import React from 'react';
+import { Text, View } from 'react-native';
 
 function AddTestResult(props) {
     return (
-        <div>
-            
-        </div>
+        <View>
+            <Text>Hello World</Text>
+        </View>
     );
 }
 

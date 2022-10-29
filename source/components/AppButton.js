@@ -4,10 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 function AppButton(props) {
     return (
-        <TouchableOpacity onPress={ props.onPress }>
+        <TouchableOpacity onPress={props.onPress}>
             <LinearGradient
-                start={{x:0, y:0}}
-                end={{x:1, y:1}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
                 colors={['#025AC9', '#532BED']}
                 style={styles.linearGradient}
             >
@@ -18,18 +18,18 @@ function AppButton(props) {
 }
 
 const styles = StyleSheet.create({
-    button:{
-        borderRadius: 20, 
+    button: {
+        borderRadius: 20,
         width: "100%",
-        textAlign: 'center', 
+        textAlign: 'center',
         color: '#FFFFFF',
         borderTopRightRadius: 20,
-        fontSize:20
+        fontSize: 20
     },
-    linearGradient:{
-        borderRadius:"20%", 
-        padding:25, 
-        marginTop:20,
+    linearGradient: {
+        borderRadius: "20%",
+        padding: 25,
+        marginTop: 20,
     }
 })
 
