@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Platform, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 function AppButton(props) {
     return (

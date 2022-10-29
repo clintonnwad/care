@@ -1,9 +1,8 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 
 import AppSearchInputField from '../components/AppSearchInputField';
-import BottomTabNav from '../components/BottomTabNav';
+import CustomBottomNav from '../components/CustomBottomNav';
 
 function AppHome(props) {
     return (
@@ -25,14 +24,13 @@ function AppHome(props) {
             </View>
             <View style={styles.bottom}>
                 <AppSearchInputField placeholder="Search for patient here ..." />
+
+
             </View>
 
-
-
-
-            <NavigationContainer independent={true}>
-                <BottomTabNav />
-            </NavigationContainer>
+            <View style={styles.navArea}>
+                <CustomBottomNav />
+            </View>
 
         </ImageBackground>
 
@@ -95,6 +93,13 @@ const styles = StyleSheet.create({
     },
     captionTop: {
         marginTop: 30
+    },
+    navArea: {
+        height: 100,
+        paddingStart: 40,
+        paddingEnd: 40,
+        paddingTop: 20,
+        backgroundColor: '#0A161D',
     },
 
 })
