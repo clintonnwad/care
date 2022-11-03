@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 
+import { login } from '../api/api';
 import AppButton from '../components/AppButton';
 import AppTextInput from '../components/AppInputField';
 
@@ -8,17 +9,13 @@ function Login(props) {
   const [emailAdd, setEmailAdd] = useState('');
   const [password, setPassword] = useState('');
 
-  const btnLogin = (e) => {
-    // if (emailAdd == "App@test.com" && password == "welcome") {
-    //   // Navigate to app home
-    //   props.navigation.navigate('AppHome')
-    // }
-    // else {
-    //   Alert.alert("Wrong Username or Password")
-    // }
-
-    props.navigation.navigate('AppHome')
-
+  const btnLogin = async (e) => {
+    try {
+      await login(emailAdd, password)
+      props.navigation.navigate('AppHome')
+    } catch (error) {
+      Alert.alert("Login failed", error.response.data.message)
+    }
   }
 
   return (

@@ -11,10 +11,12 @@ import PatientDetails from './source/screens/PatientDetails';
 
 const Stack = createNativeStackNavigator();
 
+const AuthContext = React.createContext();
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName={'Login'}>
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="AppHome" component={AppHome} options={{ headerShown: false, headerBackVisible: false }} />
         <Stack.Screen name="AddPatient" component={AddPatient} />
@@ -25,5 +27,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-
