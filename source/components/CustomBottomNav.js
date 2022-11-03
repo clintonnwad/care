@@ -1,5 +1,6 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const iconHeight = 30;
@@ -7,24 +8,20 @@ const iconWidth = 30;
 const iconHeightBig = 70;
 const iconWidthBig = 70;
 
-// let navHome = (e) => {
-//     this.props.navigation.navigate('AppHome');
-// }
-
 function CustomBottomNav(props) {
     return (
-        <View style={styles.container}>
+        <View style={styles.containerNav}>
             <View style={styles.navContainer}>
                 <View style={styles.navBar}>
-                    <Pressable onPress={() => navigation.navigate('AppHome')} style={styles.iconBehavior}>
+                    <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('ListPatients')}>
                         <Icon name="home" size={iconHeight} width={iconWidth} color="#FFFFFF" style={{ marginTop: 20 }} />
                     </Pressable>
 
-                    <Pressable onPress={() => this.changeText('Favorites')} style={styles.iconBehavior}>
+                    <TouchableOpacity style={styles.iconBehavior}>
                         <Icon name="add-circle" size={iconHeightBig} width={iconWidthBig} color="#FFFFFF" />
-                    </Pressable>
+                    </TouchableOpacity>
 
-                    <Pressable onPress={() => this.changeText('Favorites')} style={styles.iconBehavior}>
+                    <Pressable style={styles.iconBehavior}>
                         <Icon name="list" size={iconHeight} width={iconWidth} color="#FFFFFF" style={{ marginTop: 20 }} />
                     </Pressable>
                 </View>
@@ -37,7 +34,7 @@ function CustomBottomNav(props) {
 export default CustomBottomNav;
 
 const styles = StyleSheet.create({
-    container: {
+    containerNav: {
         flex: 1,
         backgroundColor: '#0A161D',
         alignItems: 'center',

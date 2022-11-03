@@ -29,7 +29,7 @@ function AppHome(props) {
             </View>
 
             <View style={styles.navArea}>
-                <CustomBottomNav />
+                <CustomBottomNav nav={props.navigation} />
             </View>
 
         </ImageBackground>

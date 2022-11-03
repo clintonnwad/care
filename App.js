@@ -2,12 +2,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import AddPatient from './source/screens/addPatient';
-import AddTestResult from './source/screens/addTestResult';
-import AppHome from './source/screens/appHome';
-import ListPatients from './source/screens/listPatients';
-import Login from './source/screens/login';
-import PatientDetails from './source/screens/patientDetails';
+import AddPatient from './source/screens/AddPatient';
+import AddTestResult from './source/screens/AddTestResult';
+import AppHome from './source/screens/AppHome';
+import ListPatients from './source/screens/ListPatients';
+import Login from './source/screens/Login';
+import PatientDetails from './source/screens/PatientDetails';
 
 const Stack = createNativeStackNavigator();
 
