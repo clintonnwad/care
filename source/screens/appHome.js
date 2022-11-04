@@ -5,7 +5,9 @@ import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function AppHome(props) {
-    const userActivity = 3;
+    const userActivity = 1;
+
+    // const [patientId, setPatientId] = React.useState("");
 
     return (
         <ImageBackground
@@ -37,8 +39,10 @@ function AppHome(props) {
                     </View>
                     :
                     <ScrollView style={styles.activityScrollView}>
+                        {/* The data here will be replaced with data from MongoDB. This is just the UI sample */}
                         {/* Item One */}
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity onPress={(patientId) => setPatientId(patientId) }> */}
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
@@ -52,7 +56,7 @@ function AppHome(props) {
                         </TouchableOpacity>
 
                         {/* Item Two */}
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
@@ -66,7 +70,7 @@ function AppHome(props) {
                         </TouchableOpacity>
 
                         {/* Item Three */}
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-3.png')} style={styles.activityAvatar} />
@@ -81,7 +85,7 @@ function AppHome(props) {
 
 
                         {/* Item Four */}
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-4.png')} style={styles.activityAvatar} />
@@ -96,7 +100,7 @@ function AppHome(props) {
 
 
                         {/* Item Five */}
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
@@ -111,7 +115,7 @@ function AppHome(props) {
 
 
                         {/* Item Six */}
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
@@ -123,10 +127,6 @@ function AppHome(props) {
                                 </View>
                             </View>
                         </TouchableOpacity>
-
-
-
-
 
 
                     </ScrollView>

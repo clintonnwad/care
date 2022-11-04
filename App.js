@@ -17,11 +17,11 @@ export default function App() {
       <Stack.Navigator initialRouteName={'Login'}>
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="AppHome" component={AppHome} options={{ headerShown: false, headerBackVisible: false }} />
-        <Stack.Screen name="AddPatient" component={AddPatient} />
-        <Stack.Screen name="ListPatients" component={ListPatients} />
-        <Stack.Screen name="PatientDetails" component={PatientDetails} />
-        <Stack.Screen name="AddTestResult" component={AddTestResult} />
+        <Stack.Screen name="AddPatient" component={AddPatient} options={{ title: "Add Patient", headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', } }} />
+        <Stack.Screen name="ListPatients" component={ListPatients} options={{ headerShown: false, title: 'List Patients', animation: 'none', headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', } }} />
+        <Stack.Screen name="PatientDetails" component={PatientDetails} options={{ title: "Patient Details" }} />
+        <Stack.Screen name="AddTestResult" component={AddTestResult} options={{ title: "Add Test Result" }} />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }

@@ -22,7 +22,7 @@ export async function login(email, password) {
     await save("token", response.data.token);
     await getValueFor("token");
 
-    console.log(await getValueFor("token"));
+    // console.log(await getValueFor("token"));
 
     return response.data.token;
 }
