@@ -1,28 +1,22 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-
-const iconHeight = 30;
-const iconWidth = 30;
-const iconHeightBig = 70;
-const iconWidthBig = 70;
+import { Alert, Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 function CustomBottomNav(props) {
     return (
         <View style={styles.containerNav}>
             <View style={styles.navContainer}>
                 <View style={styles.navBar}>
-                    <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('ListPatients')}>
-                        <Icon name="home" size={iconHeight} width={iconWidth} color="#FFFFFF" style={{ marginTop: 20 }} />
+                    <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('AppHome')}>
+                        <Image source={require('../assets/home-button.png')} style={styles.smallNavBottomButton} />
                     </Pressable>
 
-                    <TouchableOpacity style={styles.iconBehavior}>
-                        <Icon name="add-circle" size={iconHeightBig} width={iconWidthBig} color="#FFFFFF" />
+                    <TouchableOpacity style={styles.iconBehavior} onPress={() => props.nav.navigate('AddPatient')}>
+                        <Image source={require('../assets/add-button.png')} style={{ height: 60, width: 60 }} />
                     </TouchableOpacity>
 
-                    <Pressable style={styles.iconBehavior}>
-                        <Icon name="list" size={iconHeight} width={iconWidth} color="#FFFFFF" style={{ marginTop: 20 }} />
+                    <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('ListPatients')}>
+                        <Image source={require('../assets/list-button-white.png')} style={styles.smallNavBottomButton} />
                     </Pressable>
                 </View>
             </View>
@@ -43,16 +37,23 @@ const styles = StyleSheet.create({
     navContainer: {
         position: 'absolute',
         alignItems: 'center',
-        bottom: 30,
+        bottom: 25,
     },
     navBar: {
         flexDirection: 'row',
         backgroundColor: '#0A161D',
-        width: '90%',
-        justifyContent: 'space-evenly',
-        borderRadius: 40
+        width: '100%',
+        justifyContent: 'space-between',
+        paddingRight: 35,
+        paddingLeft: 35,
     },
     iconBehavior: {
         padding: 14,
+    },
+    smallNavBottomButton: {
+        height: 25,
+        width: 25,
+        marginTop: 15,
     }
+
 })

@@ -11,8 +11,6 @@ import PatientDetails from './source/screens/PatientDetails';
 
 const Stack = createNativeStackNavigator();
 
-const AuthContext = React.createContext();
-
 export default function App() {
   return (
     <NavigationContainer>
