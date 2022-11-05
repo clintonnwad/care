@@ -136,7 +136,7 @@ function AppHome(props) {
             </View>
 
             <View style={styles.navArea}>
-                <CustomBottomNav nav={props.navigation} />
+                <CustomBottomNav nav={props.navigation} page="home" />
             </View>
 
         </ImageBackground>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     topColumnOne: {
         backgroundColor: 'transparent',
         flex: 3,
-        alignContent: 'left',
+        alignContent: 'flex-start',
         justifyContent: 'flex-end',
     },
     topColumnTwo: {

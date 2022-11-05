@@ -8,7 +8,13 @@ function CustomBottomNav(props) {
             <View style={styles.navContainer}>
                 <View style={styles.navBar}>
                     <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('AppHome')}>
-                        <Image source={require('../assets/home-button.png')} style={styles.smallNavBottomButton} />
+                        {
+                            props.page == "home" ?
+                                <Image source={require('../assets/home-button.png')} style={styles.smallNavBottomButton} />
+                                :
+                                <Image source={require('../assets/home-button-white.png')} style={styles.smallNavBottomButton} />
+
+                        }
                     </Pressable>
 
                     <TouchableOpacity style={styles.iconBehavior} onPress={() => props.nav.navigate('AddPatient')}>
@@ -16,7 +22,13 @@ function CustomBottomNav(props) {
                     </TouchableOpacity>
 
                     <Pressable style={styles.iconBehavior} onPress={() => props.nav.navigate('ListPatients')}>
-                        <Image source={require('../assets/list-button-white.png')} style={styles.smallNavBottomButton} />
+                        {
+                            props.page == "listPatients" ?
+                                <Image source={require('../assets/list-button.png')} style={styles.smallNavBottomButton} />
+                                :
+                                <Image source={require('../assets/list-button-white.png')} style={styles.smallNavBottomButton} />
+
+                        }
                     </Pressable>
                 </View>
             </View>

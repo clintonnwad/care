@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     linearGradient: {
-        borderRadius: "20%",
+        borderRadius: 20,
         padding: 25,
         marginTop: 20,
     }

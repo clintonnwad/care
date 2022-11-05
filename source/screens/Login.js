@@ -10,12 +10,19 @@ function Login(props) {
   const [password, setPassword] = useState('');
 
   const btnLogin = async (e) => {
-    try {
-      await login(emailAdd, password)
-      props.navigation.navigate('AppHome')
-    } catch (error) {
-      Alert.alert("Login failed", error.response.data.message)
+    if (!emailAdd || !password) {
+      Alert.alert("Input required", "Username and Password are required");
     }
+    else {
+      try {
+        await login(emailAdd, password)
+        props.navigation.navigate('AppHome')
+      } catch (error) {
+        Alert.alert("Login failed", error.response.data.message)
+      }
+    }
+
+
   }
 
   return (
@@ -71,7 +78,7 @@ const styles = StyleSheet.create({
   },
   top: {
     height: '43%',
-    alignItems: 'left',
+    alignItems: 'flex-start',
     justifyContent: 'flex-end',
     padding: 30,
   },
