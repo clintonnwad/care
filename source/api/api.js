@@ -3,6 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 
 const baseUrl = 'http://127.0.0.1:5000';
 
+let token;
+
 async function save(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
@@ -24,9 +26,26 @@ export async function login(email, password) {
 
     // console.log(await getValueFor("token"));
 
+    token = response.data.token;
+
     return response.data.token;
 }
 
 export async function isLoggedIn() {
     return await getValueFor("token") !== undefined
 }
+
+export async function getActivities() {
+    let headers = await getHeaders();
+
+    console.log(token);
+    let response = await axios.get(`${baseUrl}/users/me/activities`, { headers })
+
+    return response.data;
+}
+
+async function getHeaders() {
+    return {
+        'Authorization': 'Bearer ' + await getValueFor("token"),
+    };
+} 

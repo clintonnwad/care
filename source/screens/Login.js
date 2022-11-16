@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 
-import { login } from '../api/api';
+import { getActivities, login } from '../api/api';
 import AppButton from '../components/AppButton';
 import AppTextInput from '../components/AppInputField';
 

@@ -1,13 +1,56 @@
+import Moment from 'moment';
 import React from 'react';
-import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { getActivities, login } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function AppHome(props) {
     const userActivity = 1;
+    let [isLoading, setIsLoading] = useState(true);
+    let [error, setError] = useState();
+    let [response, setResponse] = useState();
 
-    // const [patientId, setPatientId] = React.useState("");
+    useEffect(() => {
+        getActivities()
+            .then(
+                (result) => {
+                    setIsLoading(false);
+                    setResponse(result);
+                    console.log(result);
+                }
+            )
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+            });
+    }, []);
+
+    const activityState = () => {
+        if (isLoading) {
+            return <ActivityIndicator size="large" />
+        }
+
+        if (error) {
+            return <Text>{error}</Text>
+        }
+        // console.log("The response is: ---- " + response[0].activity_type)
+    };
+
+    let stringifyDate = (date) => {
+        Moment.locale('en');
+        return (Moment(date).format('MMMM DD, YYYY HH:mm a')) //basically you can do all sorts of the formatting and others
+    }
 
     return (
         <ImageBackground
@@ -38,98 +81,28 @@ function AppHome(props) {
                         <Text style={styles.noActivityDesc}>Try adding a patient using the + button below</Text>
                     </View>
                     :
-                    <ScrollView style={styles.activityScrollView}>
-                        {/* The data here will be replaced with data from MongoDB. This is just the UI sample */}
-                        {/* Item One */}
-                        {/* <TouchableOpacity onPress={(patientId) => setPatientId(patientId) }> */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Patrick White</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
 
-                        {/* Item Two */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
+                    response !== undefined ? <FlatList data={response}
+                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                        keyExtractor={(item) => item._id + ""}
+                        renderItem={(item) =>
+                            <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
+                                <View style={[styles.activityView, styles.activityRow]}>
+                                    <View style={styles.activityColumnOne}>
+                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                    </View>
+                                    <View style={styles.activityColumnTwo}>
+                                        <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
+                                        <Text style={styles.activityDescTwo}>{item.item.title}</Text>
+                                        <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
+                                    </View>
                                 </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Patrick Gaylord</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        }>
+                    </FlatList>
 
-                        {/* Item Three */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-3.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Paco Hammerman</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
-
-                        {/* Item Four */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-4.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Patience Rowe</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
-
-                        {/* Item Five */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Patrick Greene</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
-
-                        {/* Item Six */}
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>Add Test Record for</Text>
-                                    <Text style={styles.activityDescTwo}>Johnson Junk</Text>
-                                    <Text style={styles.activityDescThree}>October 7, 2022 08:32 am</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-
-
-                    </ScrollView>
+                        :
+                        <Text>Loading...</Text>
                 }
 
 

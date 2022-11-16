@@ -58,8 +58,8 @@ function PatientDetails(props) {
 
             <View style={styles.bottom}>
                 <TouchableOpacity onPress={() => props.navigation.navigate("AddTestResult")}>
-                    <View style={{ padding: 20 }} >
-                        <Text style={{ color: '#fff', textAlign: 'center' }}>Add Test Result</Text>
+                    <View style={{ padding: 10, backgroundColor: '#2B2BED', marginTop: 20, borderRadius: 5 }} >
+                        <Text style={{ color: '#fff', textAlign: 'center', fontWeight: '600' }}>Add Test Result</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -72,6 +72,9 @@ function PatientDetails(props) {
                     <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>AIDs, HIV, Hypertension, Diabeties</Text>
                 </View>
 
+
+
+
                 <View style={{ marginTop: 20 }}>
                     <Text style={{ color: '#fff', fontWeight: '700' }}>Test Results History</Text>
                 </View>
@@ -79,7 +82,61 @@ function PatientDetails(props) {
                 <ScrollView style={{ flex: 1, }}>
                     {/* Test Record 1 */}
                     <View style={[styles.resultsCard, styles.safe]}>
-                        <Text style={{ color: '#fff', fontWeight: '700' }}>Allergies:</Text>
+                        <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>October 20, 2021 • 12:00 am</Text>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1, paddingTop: 9, paddingBottom: 9 }}>
+                                <Text style={{ fontWeight: '700', color: '#798083' }}>Results</Text>
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 6, marginTop: 3 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>140/80 mmHg</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/blood.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 6, marginTop: 3 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>96 %SpO2</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+
+
+                            <View style={{ flex: 1, paddingTop: 25, paddingBottom: 9 }}>
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/lungs.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 5, marginTop: 4 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>30 Breaths/min</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 5, marginTop: 4 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>55 Beats/min</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+                        </View>
+
+                        <View style={{ marginTop: 7 }}>
+                            <Text style={{ fontWeight: '700', color: '#798083' }}>Notes/Observations</Text>
+                            <Text style={{ color: '#FFFFFF', marginTop: 5 }}>Patient was a little light headed and pale, heart rate was abnormally low</Text>
+                        </View>
+
+
 
                         <View style={styles.horizontalLine} />
 
@@ -87,9 +144,9 @@ function PatientDetails(props) {
                             <View style={{ flex: 1 }}>
                                 <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
                             </View>
-                            <View style={{ flex: 3 }}>
-                                <Text style={{ marginTop: 10, fontSize: 18, color: '#fff' }}>Dr. Veronica  Pearl</Text>
-                                <Text style={{ color: '#B4B4B4' }}>Ordipedian</Text>
+                            <View style={{ flex: 4 }}>
+                                <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>Dr. Veronica  Pearl</Text>
+                                <Text style={{ color: '#B4B4B4', fontSize: 13 }}>Ordipedian</Text>
                             </View>
                         </View>
 
@@ -98,32 +155,92 @@ function PatientDetails(props) {
 
 
 
-
-
                     {/* Test Record 2 */}
-                    <View style={[styles.card, styles.danger]}>
-                        <Text style={{ color: '#fff', fontWeight: '700' }}>Allergies:</Text>
-                        <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>Cat, Dogs, Rice, Air</Text>
+                    <View style={[styles.resultsCard, styles.danger]}>
+                        <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>October 20, 2021 • 12:00 am</Text>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1, paddingTop: 9, paddingBottom: 9 }}>
+                                <Text style={{ fontWeight: '700', color: '#798083' }}>Results</Text>
+
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 6, marginTop: 3 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>140/80 mmHg</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/blood.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 6, marginTop: 3 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>96 %SpO2</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+
+
+                            <View style={{ flex: 1, paddingTop: 25, paddingBottom: 9 }}>
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/lungs.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 5, marginTop: 4 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>30 Breaths/min</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                    <View style={{ flex: 1 }}>
+                                        <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                    </View>
+                                    <View style={{ flex: 5, marginTop: 4 }}>
+                                        <Text style={{ color: '#FFFFFF' }}>55 Beats/min</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+                        </View>
+
+                        <View style={{ marginTop: 7 }}>
+                            <Text style={{ fontWeight: '700', color: '#798083' }}>Notes/Observations</Text>
+                            <Text style={{ color: '#FFFFFF', marginTop: 5 }}>Patient was a little light headed and pale, heart rate was abnormally low</Text>
+                        </View>
+
+
 
                         <View style={styles.horizontalLine} />
-                        <Text style={{ color: '#fff', fontWeight: '700', }}>Conditions:</Text>
-                        <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>AIDs, HIV, Hypertension, Diabeties</Text>
+
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }}>
+                                <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
+                            </View>
+                            <View style={{ flex: 4 }}>
+                                <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>Dr. Veronica  Pearl</Text>
+                                <Text style={{ color: '#B4B4B4', fontSize: 13 }}>Ordipedian</Text>
+                            </View>
+                        </View>
                     </View>
+
+
+
+
+
 
 
                 </ScrollView>
 
 
+            </View >
 
 
 
-
-
-            </View>
-
-
-
-        </View>
+        </View >
     );
 }
 
@@ -218,8 +335,14 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     nurseAvatar: {
-        height: 55,
-        width: 55,
+        height: 45,
+        width: 45,
         borderRadius: '50%',
+        marginTop: 7,
     },
+    cardCol: {
+        flexDirection: 'row',
+        marginTop: 7,
+    },
+
 })
