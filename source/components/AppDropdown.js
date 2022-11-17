@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import SelectList from 'react-native-dropdown-select-list';
 
 function AppDropdown(props) {

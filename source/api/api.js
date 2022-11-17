@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const baseUrl = 'http://127.0.0.1:5000';
@@ -35,17 +35,52 @@ export async function isLoggedIn() {
     return await getValueFor("token") !== undefined
 }
 
+// Function handling getActivities on the app home screen
 export async function getActivities() {
     let headers = await getHeaders();
 
-    console.log(token);
+    // console.log(token);
     let response = await axios.get(`${baseUrl}/users/me/activities`, { headers })
 
-    return response.data;
+    return response.data.reverse();
 }
 
 async function getHeaders() {
     return {
         'Authorization': 'Bearer ' + await getValueFor("token"),
     };
-} 
+}
+
+export async function getUserDetails() {
+    let headers = await getHeaders();
+
+    // console.log(token);
+    let response = await axios.get(`${baseUrl}/users/me`, { headers })
+
+    return response.data;
+}
+
+export async function addPatient(firstname, lastname, gender, dob, allergies, conditions) {
+    let headers = await getHeaders();
+    let response = await axios.post(`${baseUrl}/patients`, {
+        firstname: firstname,
+        lastname: lastname,
+        gender: gender,
+        dob: dob + "T17:08:13.930Z",
+        allergies: allergies,
+        conditions: conditions
+    }, { headers: headers })
+
+    console.log(response)
+
+    return response.data;
+}
+
+// Function handling getActivities on the app home screen
+export async function getAllPatients() {
+    let headers = await getHeaders();
+
+    let response = await axios.get(`${baseUrl}/patients`, { headers })
+
+    return response.data.reverse();
+}

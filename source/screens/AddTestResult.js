@@ -2,7 +2,7 @@ import React from 'react';
 import { ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import AppButton from '../components/AppButton';
-import AppTextInput from '../components/AppInputField';
+import { AppTextInput } from '../components/AppInputField';
 
 function AddTestResult(props) {
     return (

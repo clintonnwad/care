@@ -1,9 +1,9 @@
+import { useIsFocused } from "@react-navigation/native";
 import Moment from 'moment';
-import React from 'react';
-import { useEffect, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { getActivities, login } from '../api/api';
+import { getActivities } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
@@ -13,7 +13,10 @@ function AppHome(props) {
     let [error, setError] = useState();
     let [response, setResponse] = useState();
 
+    const isFocused = useIsFocused();
+
     useEffect(() => {
+        console.log("called");
         getActivities()
             .then(
                 (result) => {
@@ -34,22 +37,13 @@ function AppHome(props) {
                 }
                 console.log(error.config);
             });
-    }, []);
+    }, [props, isFocused]);
 
-    const activityState = () => {
-        if (isLoading) {
-            return <ActivityIndicator size="large" />
-        }
 
-        if (error) {
-            return <Text>{error}</Text>
-        }
-        // console.log("The response is: ---- " + response[0].activity_type)
-    };
-
+    // Here, we use Moment.js to format the date from JSON date to string
     let stringifyDate = (date) => {
         Moment.locale('en');
-        return (Moment(date).format('MMMM DD, YYYY HH:mm a')) //basically you can do all sorts of the formatting and others
+        return (Moment(date).format('MMMM DD, YYYY HH:mm a'))
     }
 
     return (
@@ -60,7 +54,7 @@ function AppHome(props) {
             <View style={styles.top}>
                 <View style={styles.topRow}>
                     <View style={styles.topColumnOne}>
-                        <Text style={styles.intro}>Hi, Mary</Text>
+                        <Text style={styles.intro}>Hi, Clinton</Text>
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>
@@ -100,12 +94,9 @@ function AppHome(props) {
                             </TouchableOpacity>
                         }>
                     </FlatList>
-
                         :
                         <Text>Loading...</Text>
                 }
-
-
             </View>
 
             <View style={styles.navArea}>

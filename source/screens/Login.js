@@ -3,7 +3,7 @@ import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, View } 
 
 import { getActivities, login } from '../api/api';
 import AppButton from '../components/AppButton';
-import AppTextInput from '../components/AppInputField';
+import { AppTextInput } from '../components/AppInputField';
 
 function Login(props) {
   const [emailAdd, setEmailAdd] = useState('');

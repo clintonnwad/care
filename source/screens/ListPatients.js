@@ -1,131 +1,79 @@
-import React from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Moment from 'moment';
+import { React, useEffect, useState } from 'react';
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function ListPatients(props) {
     const numPatients = 3;
+    let [isLoading, setIsLoading] = useState(true);
+    let [error, setError] = useState();
+    let [response, setResponse] = useState();
+
+    useEffect(() => {
+        console.log("called");
+        getAllPatients()
+            .then(
+                (result) => {
+                    setIsLoading(false);
+                    setResponse(result);
+                    console.log(result);
+                }
+            )
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+            });
+    }, []);
+
+    // Here, we use Moment.js to format the date from JSON date to string
+    let stringifyDate = (date) => {
+        Moment.locale('en');
+        return (Moment(date).format('MMMM DD, YYYY'))
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
                 <AppSearchInputField placeholder={"Search for patient here ..."} />
-                <ScrollView>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patricia White</Text>
-                                <Text style={styles.activityDescTwo}>70 y.o Female</Text>
-                                <Text style={styles.activityDescThree}>Joined October 7, 2022</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
 
-                    {/* Item 2 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patrick Gaylord</Text>
-                                <Text style={styles.activityDescTwo}>76 y.o  Female</Text>
-                                <Text style={styles.activityDescThree}>Joined January 23, 2014</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
 
-                    {/* Item 3 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-3.png')} style={styles.activityAvatar} />
+                {response !== undefined ? <FlatList data={response}
+                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                    keyExtractor={(item) => item._id + ""}
+                    renderItem={(item) =>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
+                            <View style={[styles.listItem, styles.activityRow]}>
+                                <View style={styles.activityColumnOne}>
+                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                </View>
+                                <View style={styles.activityColumnTwo}>
+                                    <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                    <Text style={styles.activityDescTwo}>{item.item.gender}</Text>
+                                    <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
+                                </View>
                             </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Paco Hammerman</Text>
-                                <Text style={styles.activityDescTwo}>69 y.o Male</Text>
-                                <Text style={styles.activityDescThree}>Joined August 14, 2015</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Item 4 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-4.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patience Rowe</Text>
-                                <Text style={styles.activityDescTwo}>69 y.o Female</Text>
-                                <Text style={styles.activityDescThree}>Joined September 7, 2020</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Item 5 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patricia White</Text>
-                                <Text style={styles.activityDescTwo}>70 y.o Female</Text>
-                                <Text style={styles.activityDescThree}>Joined October 7, 2022</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Item 6 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-2.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patrick Gaylord</Text>
-                                <Text style={styles.activityDescTwo}>76 y.o  Female</Text>
-                                <Text style={styles.activityDescThree}>Joined January 23, 2014</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Item 7 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-3.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Paco Hammerman</Text>
-                                <Text style={styles.activityDescTwo}>69 y.o Male</Text>
-                                <Text style={styles.activityDescThree}>Joined August 14, 2015</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    {/* Item 8 */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                        <View style={[styles.listItem, styles.activityRow]}>
-                            <View style={styles.activityColumnOne}>
-                                <Image source={require('../assets/patient-4.png')} style={styles.activityAvatar} />
-                            </View>
-                            <View style={styles.activityColumnTwo}>
-                                <Text style={styles.activityDescOne}>Patience Rowe</Text>
-                                <Text style={styles.activityDescTwo}>69 y.o Female</Text>
-                                <Text style={styles.activityDescThree}>Joined September 7, 2020</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    }>
+                </FlatList>
+                    :
+                    <View><Text>Loading...</Text></View>}
 
 
 
-                </ScrollView>
+
+
+
             </View>
 
             <View style={styles.navArea}>
