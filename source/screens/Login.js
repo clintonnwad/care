@@ -16,7 +16,7 @@ function Login(props) {
     else {
       try {
         await login(emailAdd, password)
-        props.navigation.navigate('AppHome')
+        props.navigation.replace('AppHome')
       } catch (error) {
         Alert.alert("Login failed", error.response.data.message)
       }

@@ -16,7 +16,6 @@ function AppHome(props) {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        console.log("called");
         getActivities()
             .then(
                 (result) => {
