@@ -17,13 +17,13 @@ function AddPatient(props) {
 
     const [selectedDate, setSelectedDate] = useState('');
 
-    let [firstname, setFirstname] = useState("");
-    let [lastname, setLastname] = useState("");
+    let [firstname, setFirstname] = useState('');
+    let [lastname, setLastname] = useState('');
     // let [gender, setGender] = useState("");
     let gender = "Male";
-    let [dob, setDOB] = useState("");
-    let [allergies, setAllergies] = useState("");
-    let [conditions, setConditions] = useState("");
+    let [dob, setDOB] = useState('');
+    let [allergies, setAllergies] = useState('');
+    let [conditions, setConditions] = useState('');
 
 
     let createPatient = (e) => {
@@ -38,7 +38,7 @@ function AddPatient(props) {
                 .then(
                     (result) => {
                         Alert.alert("Successful", "Patient added sucessfully");
-                        props.navigation.navigate("AppHome")
+                        props.navigation.navigate("AppHome");
                     }
                 )
                 .catch(function (error) {

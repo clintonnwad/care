@@ -71,7 +71,7 @@ export async function addPatient(firstname, lastname, gender, dob, allergies, co
         conditions: conditions
     }, { headers: headers })
 
-    console.log(response)
+    // console.log(response)
 
     return response.data;
 }
@@ -83,4 +83,39 @@ export async function getAllPatients() {
     let response = await axios.get(`${baseUrl}/patients`, { headers })
 
     return response.data.reverse();
+}
+
+export async function getPatientByName(query) {
+    let headers = await getHeaders();
+
+    // console.log(token);
+    let response = await axios.get(`${baseUrl}/patients?query=${query}`, { headers })
+
+    return response.data;
+}
+
+
+export async function addTestResult(residentID, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
+    let headers = await getHeaders();
+    let response = await axios.post(`${baseUrl}/patients/${residentID}/tests`, {
+        systolic_pressure: systolic_pressure,
+        diastolic_pressure: diastolic_pressure,
+        heartbeat: heartbeat,
+        respiratory_rate: respiratory_rate,
+        blood_oxygen: blood_oxygen,
+        notes: notes
+    }, { headers: headers })
+
+    console.log(response)
+
+    return response.data;
+}
+
+export async function getPatientDetails(residentID) {
+    let headers = await getHeaders();
+
+    // console.log(token);
+    let response = await axios.get(`${baseUrl}/127.0.0.1:5000/patients/${residentID}`, { headers })
+
+    return response.data;
 }

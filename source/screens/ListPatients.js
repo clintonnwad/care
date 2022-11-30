@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -7,32 +8,38 @@ import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function ListPatients(props) {
-    const numPatients = 3;
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
 
     useEffect(() => {
-        console.log("called");
         getAllPatients()
             .then(
                 (result) => {
                     setIsLoading(false);
                     setResponse(result);
-                    console.log(result);
                 }
             )
             .catch(function (error) {
                 if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
+                    Alert.alert(
+                        "System Error",
+                        "Unable to fetch data. Error Details: \n" +
+                        error.response.data + "\n\n" +
+                        error.response.status + "\n\n" +
+                        error.response.headers + "\n\n"
+                    );
                 } else if (error.request) {
-                    console.log(error.request);
+                    Alert.alert(
+                        "System Error",
+                        "Error requesting data. Error Details: \n" + error.request
+                    );
                 } else {
-                    console.log('Error', error.message);
+                    Alert.alert(
+                        "System Error",
+                        "Error getting data. Error Details: \n" + error.message
+                    );
                 }
-                console.log(error.config);
             });
     }, []);
 
@@ -52,7 +59,7 @@ function ListPatients(props) {
                     ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
                     keyExtractor={(item) => item._id + ""}
                     renderItem={(item) =>
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
                             <View style={[styles.listItem, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />

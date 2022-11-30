@@ -42,7 +42,7 @@ function Login(props) {
         <View style={styles.loginContainer}>
           <Text style={styles.title}>Login</Text>
 
-          <AppTextInput placeholder="Email Address" onChangeText={(emailAdd) => setEmailAdd(emailAdd)} />
+          <AppTextInput placeholder="Email Address" autoCompleteType="email" keyboardType="emailAddress" autoCapitalize="none" onChangeText={(emailAdd) => setEmailAdd(emailAdd)} />
           <AppTextInput placeholder="Password" textContentType="password" secureTextEntry={true} onChangeText={(password) => setPassword(password)} />
 
           <AppButton text="Login" onPress={() => btnLogin()} />

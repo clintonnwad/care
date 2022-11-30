@@ -1,7 +1,13 @@
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 function PatientDetails(props) {
+    const route = useRoute();
+    const residentID = route.params.residentID;
+
+
+
     return (
         <View style={styles.container}>
             <View style={styles.top}>
@@ -57,7 +63,7 @@ function PatientDetails(props) {
 
 
             <View style={styles.bottom}>
-                <TouchableOpacity onPress={() => props.navigation.navigate("AddTestResult")}>
+                <TouchableOpacity onPress={() => props.navigation.navigate("AddTestResult", { residentID })}>
                     <View style={{ padding: 10, backgroundColor: '#2B2BED', marginTop: 20, borderRadius: 5 }} >
                         <Text style={{ color: '#fff', textAlign: 'center', fontWeight: '600' }}>Add Test Result</Text>
                     </View>

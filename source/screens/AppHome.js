@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import Moment from 'moment';
 import { React, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 
 import { getActivities } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
@@ -14,6 +14,7 @@ function AppHome(props) {
     let [response, setResponse] = useState();
 
     const isFocused = useIsFocused();
+    const test = "hello";
 
     useEffect(() => {
         getActivities()
@@ -21,20 +22,30 @@ function AppHome(props) {
                 (result) => {
                     setIsLoading(false);
                     setResponse(result);
-                    console.log(result);
+                    // console.log(result);
                 }
             )
             .catch(function (error) {
                 if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
+                    Alert.alert(
+                        "System Error",
+                        "Unable to fetch data. Error Details: \n" +
+                        error.response.data + "\n\n" +
+                        error.response.status + "\n\n" +
+                        error.response.headers + "\n\n"
+                    );
                 } else if (error.request) {
-                    console.log(error.request);
+                    Alert.alert(
+                        "System Error",
+                        "Error requesting data. Error Details: \n" + error.request
+                    );
                 } else {
-                    console.log('Error', error.message);
+                    Alert.alert(
+                        "System Error",
+                        "Error getting data. Error Details: \n" + error.message
+                    );
                 }
-                console.log(error.config);
+                // console.log(error.config);
             });
     }, [props, isFocused]);
 
@@ -79,7 +90,7 @@ function AppHome(props) {
                         ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
                         keyExtractor={(item) => item._id + ""}
                         renderItem={(item) =>
-                            <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
+                            <View>
                                 <View style={[styles.activityView, styles.activityRow]}>
                                     <View style={styles.activityColumnOne}>
                                         <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
@@ -90,7 +101,7 @@ function AppHome(props) {
                                         <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
                                     </View>
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                         }>
                     </FlatList>
                         :
