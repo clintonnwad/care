@@ -1,11 +1,12 @@
 import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
+import { calcNumYears, stringifyDate } from '../components/MomentStringify';
 
 function ListPatients(props) {
     let [isLoading, setIsLoading] = useState(true);
@@ -13,6 +14,7 @@ function ListPatients(props) {
     let [response, setResponse] = useState([]);
     let [searchTerm, setSearchTerm] = useState();
 
+    // For Search on change text
     const searchList = useCallback((text) => {
         const tempList = [...response];
 
@@ -26,6 +28,7 @@ function ListPatients(props) {
 
     }, [response])
 
+    // Fetch list of all patients from api
     useEffect(() => {
         getAllPatients()
             .then(
@@ -56,23 +59,6 @@ function ListPatients(props) {
                 }
             });
     }, []);
-
-    // Here, we use Moment.js to format the date from JSON date to string
-    const stringifyDate = (date) => {
-        Moment.locale('en');
-        return (Moment(date).format('MMMM DD, YYYY'))
-    }
-
-    // Here, we calculate the age of this patient using Moment.js
-    const calcNumYears = (dob) => {
-        const formattedDate = Moment(dob).format('MMDDYYYY');
-        const numYearsMoment = Moment(formattedDate, "MMDDYYYY").fromNow();
-
-        const numYearsArr = numYearsMoment.split(' ');
-        const numYears = numYearsArr[0] + " " + numYearsArr[1];
-
-        return numYears;
-    }
 
 
 

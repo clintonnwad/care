@@ -1,14 +1,13 @@
 import { useRoute } from '@react-navigation/native';
-import Moment from 'moment';
 import { React, useEffect, useState } from 'react';
 import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { deleteTestRecord, getPatientDetails } from '../api/api';
+import { calcNumYears, stringifyDate, stringifyDateLong } from '../components/MomentStringify';
 
 function PatientDetails(props) {
     const route = useRoute();
-
     const residentID = route.params.residentID;
 
     let [isLoading, setIsLoading] = useState(true);
@@ -16,6 +15,7 @@ function PatientDetails(props) {
     let [response, setResponse] = useState([]);
     let [patientTests, setPatientTests] = useState([]);
     let [latestTestResult, setLatestTestResult] = useState([]);
+    let testResultEval = 'normal';
 
     useEffect(() => {
         getPatientDetails(residentID)
@@ -53,87 +53,6 @@ function PatientDetails(props) {
                 }
             });
     }, [response]);
-
-
-    // Here, we use Moment.js to format the date from JSON date to string
-    let stringifyDate = (date) => {
-        Moment.locale('en');
-        return (Moment(date).format('MMMM DD, YYYY'));
-    }
-
-    // This is the long form of the Stringigy Date function above
-    let stringifyDateLong = (date) => {
-        Moment.locale('en');
-        return (Moment(date).format('MMMM Do, YYYY • h:mm a'));
-    }
-
-    // Here, we calculate the age of this patient using Moment.js
-    const calcNumYears = (dob) => {
-        const formattedDate = Moment(dob).format('MMDDYYYY');
-        const numYearsMoment = Moment(formattedDate, "MMDDYYYY").fromNow();
-
-        const numYearsArr = numYearsMoment.split(' ');
-        const numYears = numYearsArr[0] + " " + numYearsArr[1];
-
-        return numYears;
-    }
-
-    /********* TEST RESULT EVALUATION  ************/
-    const [testResultEval, setTestResultEval] = useState();
-    const evaluateTestResult = (systolic, diastolic, bloodOxygenLevel, respiratoryRate, heartBeatRate) => {
-        const [bloodPressure, setBloodPressure] = useState();
-        const [bloodOxygen, setBloodOxygen] = useState();
-        const [respRate, setRespRate] = useState();
-        const [heartBeat, setHeartBeat] = useState();
-
-        // Blood Pressure
-        if (systolic < 120 && diastolic < 80) {
-            setBloodPressure('normal');
-        }
-        else if (systolic >= 120 && systolic <= 129 && diastolic < 80) {
-            setBloodPressure('warning');
-        }
-        else if (systolic >= 130 && systolic <= 139 && diastolic >= 80 && diastolic <= 89) {
-            setBloodPressure('warning');
-        }
-        else if (systolic >= 140 && diastolic >= 90) {
-            setBloodPressure('danger');
-        }
-
-        // Blood Oxygen
-        if (bloodOxygenLevel >= 95) {
-            setBloodOxygen('normal');
-        }
-        else if (bloodOxygenLevel < 95) {
-            setBloodOxygen('danger');
-        }
-
-        // Respiratory Rate
-        if (respiratoryRate >= 12 && respiratoryRate <= 25) {
-            setRespRate('normal');
-        }
-        else if (respiratoryRate < 12 || respiratoryRate > 25) {
-            setRespRate('danger');
-        }
-
-        // Heartbeat Rate
-        if (heartBeatRate >= 60 && heartBeatRate <= 80) {
-            setHeartBeat('normal');
-        }
-        else if (heartBeatRate < 60 || heartBeatRate > 80) {
-            setHeartBeat('danger');
-        }
-
-        // Check
-        if (bloodPressure != 'normal' || bloodOxygen != 'normal' || respRate != 'normal' || heartBeat != 'normal') {
-            setTestResultEval('normal');
-        }
-        else {
-            setTestResultEval('danger');
-        }
-        console.log(testResultEval);
-
-    }
 
     // Right Swipe
     const rightSwipe = (recordID, residentID) => {
@@ -263,14 +182,6 @@ function PatientDetails(props) {
                         data={patientTests.reverse()}
                         ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
                         keyExtractor={(item) => item._id + ""}
-                        extraData={() => {
-                            evaluateTestResult(
-                                item.item.systolic_pressure,
-                                item.item.diastolic_pressure,
-                                item.item.blood_oxygen,
-                                item.item.respiratory_rate,
-                                item.item.heartbeat)
-                        }}
                         renderItem={(item) =>
                             <Swipeable renderRightActions={() => rightSwipe(item.item._id, residentID)}>
                                 <TouchableOpacity
