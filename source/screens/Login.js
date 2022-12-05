@@ -15,10 +15,10 @@ function Login(props) {
     }
     else {
       try {
-        await login(emailAdd, password)
-        props.navigation.replace('AppHome')
+        await login(emailAdd, password);
+        props.navigation.replace('AppHome');
       } catch (error) {
-        Alert.alert("Login failed", error.response.data.message)
+        Alert.alert("Login failed", error.response.data.message);
       }
     }
 

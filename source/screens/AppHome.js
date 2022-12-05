@@ -1,20 +1,18 @@
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 import Moment from 'moment';
-import { React, useEffect, useState } from 'react';
-import { Alert, FlatList, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { React, useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, Image, ImageBackground, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 
 import { getActivities } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function AppHome(props) {
-    const userActivity = 1;
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
 
     const isFocused = useIsFocused();
-    const test = "hello";
 
     useEffect(() => {
         getActivities()
@@ -22,7 +20,6 @@ function AppHome(props) {
                 (result) => {
                     setIsLoading(false);
                     setResponse(result);
-                    // console.log(result);
                 }
             )
             .catch(function (error) {
@@ -47,6 +44,7 @@ function AppHome(props) {
                 }
                 // console.log(error.config);
             });
+
     }, [props, isFocused]);
 
 
@@ -56,6 +54,10 @@ function AppHome(props) {
         return (Moment(date).format('MMMM DD, YYYY HH:mm a'))
     }
 
+    const searchList = useCallback((search) => {
+        props.navigation.navigate("ListPatients", (search));
+    })
+
     return (
         <ImageBackground
             source={require('../assets/empty-background.png')}
@@ -64,7 +66,7 @@ function AppHome(props) {
             <View style={styles.top}>
                 <View style={styles.topRow}>
                     <View style={styles.topColumnOne}>
-                        <Text style={styles.intro}>Hi, Clinton</Text>
+                        <Text style={styles.intro}>Hi Clinton,</Text>
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>
@@ -74,38 +76,35 @@ function AppHome(props) {
                 </View>
             </View>
             <View style={styles.bottom}>
-                <AppSearchInputField placeholder="Search for patient here ..." />
+                <AppSearchInputField placeholder="Search for patient here ..." onChangeText={(search) => searchList(search)} />
 
                 <Text style={styles.tinyText}>Recent activities</Text>
 
-                {userActivity < 1 ?
+                {/* Display only the last 10 activities in a flatlist */}
+                {response !== undefined ? <FlatList data={response.slice(0, 10)}
+                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                    keyExtractor={(item) => item._id + ""}
+                    renderItem={(item) =>
+                        <View>
+                            <View style={[styles.activityView, styles.activityRow]}>
+                                <View style={styles.activityColumnOne}>
+                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                </View>
+                                <View style={styles.activityColumnTwo}>
+                                    <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
+                                    <Text style={styles.activityDescTwo}>{item.item.title}</Text>
+                                    <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    }>
+                </FlatList>
+                    :
                     <View style={styles.activityView}>
                         <ImageBackground source={require('../assets/no-activity.png')} style={styles.noActivityImage} />
                         <Text style={styles.noActivityHeader}>No Recent Activity</Text>
                         <Text style={styles.noActivityDesc}>Try adding a patient using the + button below</Text>
                     </View>
-                    :
-
-                    response !== undefined ? <FlatList data={response}
-                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
-                        keyExtractor={(item) => item._id + ""}
-                        renderItem={(item) =>
-                            <View>
-                                <View style={[styles.activityView, styles.activityRow]}>
-                                    <View style={styles.activityColumnOne}>
-                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                    </View>
-                                    <View style={styles.activityColumnTwo}>
-                                        <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
-                                        <Text style={styles.activityDescTwo}>{item.item.title}</Text>
-                                        <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        }>
-                    </FlatList>
-                        :
-                        <Text>Loading...</Text>
                 }
             </View>
 

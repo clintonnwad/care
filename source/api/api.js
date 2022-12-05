@@ -1,7 +1,8 @@
 import axios, { Axios } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const baseUrl = 'http://127.0.0.1:5000';
+// const baseUrl = 'http://127.0.0.1:6000';
+const baseUrl = 'https://ancient-hollows-68245.herokuapp.com';
 
 let token;
 
@@ -24,22 +25,20 @@ export async function login(email, password) {
     await save("token", response.data.token);
     await getValueFor("token");
 
-    // console.log(await getValueFor("token"));
-
     token = response.data.token;
 
     return response.data.token;
 }
 
 export async function isLoggedIn() {
-    return await getValueFor("token") !== undefined
+    return await getValueFor("token") !== undefined;
 }
+
 
 // Function handling getActivities on the app home screen
 export async function getActivities() {
     let headers = await getHeaders();
 
-    // console.log(token);
     let response = await axios.get(`${baseUrl}/users/me/activities`, { headers })
 
     return response.data.reverse();
@@ -106,7 +105,7 @@ export async function addTestResult(residentID, systolic_pressure, diastolic_pre
         notes: notes
     }, { headers: headers })
 
-    console.log(response)
+    // console.log(response)
 
     return response.data;
 }
@@ -114,8 +113,31 @@ export async function addTestResult(residentID, systolic_pressure, diastolic_pre
 export async function getPatientDetails(residentID) {
     let headers = await getHeaders();
 
-    // console.log(token);
-    let response = await axios.get(`${baseUrl}/127.0.0.1:5000/patients/${residentID}`, { headers })
+    let response = await axios.get(`${baseUrl}/patients/${residentID}`, { headers });
 
     return response.data;
+}
+
+export async function updatePatientTestResult(residentID, testRecordId, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
+    let headers = await getHeaders();
+    let response = await axios.put(`${baseUrl}/patients/${residentID}/tests/${testRecordId}`, {
+        systolic_pressure: systolic_pressure,
+        diastolic_pressure: diastolic_pressure,
+        heartbeat: heartbeat,
+        respiratory_rate: respiratory_rate,
+        blood_oxygen: blood_oxygen,
+        notes: notes
+    }, { headers: headers })
+
+    console.log(response);
+
+    return response.data;
+}
+
+export async function deleteTestRecord(recordID, residentID) {
+    let headers = await getHeaders();
+
+    let response = await axios.delete(`${baseUrl}/patients/${residentID}/tests/${recordID}`, { headers });
+
+    // return response.data;
 }

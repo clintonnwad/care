@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
-import { React, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { getAllPatients } from '../api/api';
@@ -10,7 +10,21 @@ import CustomBottomNav from '../components/CustomBottomNav';
 function ListPatients(props) {
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
-    let [response, setResponse] = useState();
+    let [response, setResponse] = useState([]);
+    let [searchTerm, setSearchTerm] = useState();
+
+    const searchList = useCallback((text) => {
+        const tempList = [...response];
+
+        const newList = tempList.filter(list => {
+            const regex = new RegExp(`^${text}`, 'gi')
+
+            return list.first_name.match(regex)
+        })
+
+        setResponse(newList)
+
+    }, [response])
 
     useEffect(() => {
         getAllPatients()
@@ -44,15 +58,28 @@ function ListPatients(props) {
     }, []);
 
     // Here, we use Moment.js to format the date from JSON date to string
-    let stringifyDate = (date) => {
+    const stringifyDate = (date) => {
         Moment.locale('en');
         return (Moment(date).format('MMMM DD, YYYY'))
     }
 
+    // Here, we calculate the age of this patient using Moment.js
+    const calcNumYears = (dob) => {
+        const formattedDate = Moment(dob).format('MMDDYYYY');
+        const numYearsMoment = Moment(formattedDate, "MMDDYYYY").fromNow();
+
+        const numYearsArr = numYearsMoment.split(' ');
+        const numYears = numYearsArr[0] + " " + numYearsArr[1];
+
+        return numYears;
+    }
+
+
+
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <AppSearchInputField placeholder={"Search for patient here ..."} />
+                <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
 
 
                 {response !== undefined ? <FlatList data={response}
@@ -66,7 +93,7 @@ function ListPatients(props) {
                                 </View>
                                 <View style={styles.activityColumnTwo}>
                                     <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
-                                    <Text style={styles.activityDescTwo}>{item.item.gender}</Text>
+                                    <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
                                     <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
                                 </View>
                             </View>
