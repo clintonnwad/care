@@ -19,7 +19,7 @@ function UpdateTestResult(props) {
     let [notes, setNotes] = useState(testRecord.notes);
 
 
-    const updateTestResult = (e) => {
+    const updateTest = (e) => {
         if (!systolic_pressure || !diastolic_pressure || !heartbeat || !respiratory_rate || !blood_oxygen || !notes) {
             Alert.alert("Warning!", "You missed a record. You need to enter a value for all fields");
         }
@@ -70,7 +70,7 @@ function UpdateTestResult(props) {
                 <Text style={styles.label}>Notes/Observations</Text>
                 <AppTextInput placeholder="Enter note or any observations" defaultValue={testRecord.notes} multiline={true} numberOfLines={6} height={100} onChangeText={(notes) => setNotes(notes)} />
 
-                <AppButton text="Update" onPress={() => updateTestResult()} />
+                <AppButton text="Update" onPress={() => updateTest()} />
             </ScrollView>
 
 

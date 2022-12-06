@@ -1,5 +1,6 @@
 import axios, { Axios } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { Alert } from 'react-native';
 
 // const baseUrl = 'http://127.0.0.1:6000';
 const baseUrl = 'https://ancient-hollows-68245.herokuapp.com';
@@ -53,7 +54,6 @@ async function getHeaders() {
 export async function getUserDetails() {
     let headers = await getHeaders();
 
-    // console.log(token);
     let response = await axios.get(`${baseUrl}/users/me`, { headers })
 
     return response.data;
@@ -70,8 +70,6 @@ export async function addPatient(firstname, lastname, gender, dob, allergies, co
         conditions: conditions
     }, { headers: headers })
 
-    // console.log(response)
-
     return response.data;
 }
 
@@ -87,7 +85,6 @@ export async function getAllPatients() {
 export async function getPatientByName(query) {
     let headers = await getHeaders();
 
-    // console.log(token);
     let response = await axios.get(`${baseUrl}/patients?query=${query}`, { headers })
 
     return response.data;
@@ -104,8 +101,6 @@ export async function addTestResult(residentID, systolic_pressure, diastolic_pre
         blood_oxygen: blood_oxygen,
         notes: notes
     }, { headers: headers })
-
-    // console.log(response)
 
     return response.data;
 }
@@ -129,8 +124,6 @@ export async function updatePatientTestResult(residentID, testRecordId, systolic
         notes: notes
     }, { headers: headers })
 
-    console.log(response);
-
     return response.data;
 }
 
@@ -139,5 +132,24 @@ export async function deleteTestRecord(recordID, residentID) {
 
     let response = await axios.delete(`${baseUrl}/patients/${residentID}/tests/${recordID}`, { headers });
 
-    // return response.data;
+    if (response.data !== 'OK') {
+        Alert.alert("System Error", "Oops! We were unable to delete this test record.");
+    }
+
+}
+
+export async function updatePatient(residentID, firstname, lastname, gender, dob, allergies, conditions) {
+    let headers = await getHeaders();
+    let response = await axios.put(`${baseUrl}/patients/${residentID}`, {
+        firstname: firstname,
+        lastname: lastname,
+        gender: gender,
+        dob: dob + "T17:08:13.930Z",
+        allergies: allergies,
+        conditions: conditions
+    }, { headers: headers })
+
+    console.log(response);
+
+    return response.data;
 }

@@ -1,7 +1,8 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
@@ -24,9 +25,9 @@ function ListPatients(props) {
             return list.first_name.match(regex)
         })
 
-        setResponse(newList)
+        setResponse(newList);
 
-    }, [response])
+    }, [response]);
 
     // Fetch list of all patients from api
     useEffect(() => {
@@ -60,14 +61,35 @@ function ListPatients(props) {
             });
     }, []);
 
+    // Filter Emergency
+    const filterEmergency = useCallback(() => {
+        const tmpList = [...response];
+
+        const emergencyList = tmpList.filter(tmpList => tmpList.health_status == 'EMERGENCY' || tmpList.health_status == 'NEEDS_MONITORING');
+
+        setResponse(emergencyList);
+
+    }, [response]);
 
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 5 }}>
+                        <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
+                    </View>
 
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.filterView} >
+                            <Ionicons name="filter-outline" size={20} color="white" onPress={() => filterEmergency()} />
+                        </View>
+                    </View>
+                </View>
 
+            </View>
+
+            <View style={styles.bottom}>
                 {response !== undefined ? <FlatList data={response}
                     ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
                     keyExtractor={(item) => item._id + ""}
@@ -88,12 +110,6 @@ function ListPatients(props) {
                 </FlatList>
                     :
                     <View><Text>Loading...</Text></View>}
-
-
-
-
-
-
             </View>
 
             <View style={styles.navArea}>
@@ -116,12 +132,12 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     top: {
-        flex: 1,
+        flex: 2,
         paddingStart: 20,
         paddingEnd: 20,
     },
     bottom: {
-        flex: 4,
+        flex: 10,
         paddingStart: 20,
         paddingEnd: 20,
     },
@@ -208,8 +224,17 @@ const styles = StyleSheet.create({
     },
     activityScrollView: {
         marginBottom: 20
+    },
+    filterView: {
+        backgroundColor: '#172A35',
+        borderRadius: 53 / 2,
+        width: 53,
+        height: 53,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        marginLeft: 10,
     }
-
 
 
 })

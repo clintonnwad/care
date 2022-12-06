@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import { React, useEffect, useState } from 'react';
 import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -15,7 +15,8 @@ function PatientDetails(props) {
     let [response, setResponse] = useState([]);
     let [patientTests, setPatientTests] = useState([]);
     let [latestTestResult, setLatestTestResult] = useState([]);
-    let testResultEval = 'normal';
+    let [update, setUpdate] = useState();
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         getPatientDetails(residentID)
@@ -52,7 +53,7 @@ function PatientDetails(props) {
                     );
                 }
             });
-    }, [response]);
+    }, [props, update, isFocused]);
 
     // Right Swipe
     const rightSwipe = (recordID, residentID) => {
@@ -62,14 +63,18 @@ function PatientDetails(props) {
                     'Delete Test Record',
                     'Are you sure you want to delete this test record?',
                     [
-                        { text: 'Yes', onPress: () => deleteTestRecord(recordID, residentID) },
+                        { text: 'Yes', onPress: () => deleteTest(recordID, residentID) },
                         { text: 'Cancel' },
                     ]
                 )}>
                 <Text>Delete</Text>
             </TouchableOpacity>
-
         )
+    }
+
+    const deleteTest = (recordID, residentID) => {
+        let delResponse = deleteTestRecord(recordID, residentID);
+        setUpdate('updated');
     }
 
 
@@ -80,9 +85,11 @@ function PatientDetails(props) {
                 <View style={styles.topSegmentGroup}>
                     <View style={styles.topSegmentOne}>
                         <View style={styles.topSegmentOneRow}>
-                            <View style={styles.topSegmentOneColumnFirst}>
-                                <Image source={require('../assets/patient-1.png')} style={styles.avatar} />
-                            </View>
+                            <TouchableOpacity style={styles.topSegmentOneColumnFirst} onPress={() => props.navigation.navigate('UpdatePatient', { response })}>
+                                <View>
+                                    <Image source={require('../assets/patient-1.png')} style={styles.avatar} />
+                                </View>
+                            </TouchableOpacity>
                             <View style={styles.topSegmentOneColumnSecond}>
                                 {(
                                     <View>
@@ -159,7 +166,7 @@ function PatientDetails(props) {
                     </View>
                 </TouchableOpacity>
 
-                <View style={[styles.card, styles.safe]}>
+                <View style={[styles.card]}>
                     <Text style={{ color: '#fff', fontWeight: '700' }}>Allergies:</Text>
                     <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>{response.allergies}</Text>
 
@@ -186,9 +193,9 @@ function PatientDetails(props) {
                             <Swipeable renderRightActions={() => rightSwipe(item.item._id, residentID)}>
                                 <TouchableOpacity
                                     style={
-                                        testResultEval == 'normal' ?
-                                            [styles.resultsCard, styles.safe] :
-                                            [styles.resultsCard, styles.danger]
+                                        item.item.status == 'EMERGENCY' ?
+                                            [styles.resultsCard, styles.danger] :
+                                            [styles.resultsCard, styles.safe]
                                     }
                                     onPress={() => props.navigation.navigate('UpdateTestResult', { testRecord: item.item, residentID: residentID })}>
                                     <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>{stringifyDateLong(item.item.createdAt)}</Text>
@@ -252,8 +259,8 @@ function PatientDetails(props) {
                                             <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
                                         </View>
                                         <View style={{ flex: 4 }}>
-                                            <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>Dr. {item.item.health_worker.name}</Text>
-                                            <Text style={{ color: '#B4B4B4', fontSize: 13 }}>{item.item.health_worker.job_title}</Text>
+                                            <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>Dr. {item.item.health_worker?.name}</Text>
+                                            <Text style={{ color: '#B4B4B4', fontSize: 13 }}>{item.item.health_worker?.job_title}</Text>
                                         </View>
                                     </View>
 

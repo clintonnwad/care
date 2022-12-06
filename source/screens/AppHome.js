@@ -47,6 +47,13 @@ function AppHome(props) {
 
     }, [props, isFocused]);
 
+    const logout = () => {
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
+    }
+
 
     // Here, we use Moment.js to format the date from JSON date to string
     let stringifyDate = (date) => {
@@ -70,9 +77,12 @@ function AppHome(props) {
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>
-                    <View style={styles.topColumnTwo}>
+                    <TouchableOpacity style={styles.topColumnTwo} onPress={() => Alert.alert('Logout', 'Are you sure you want to logout?', [
+                        { text: 'Yes', onPress: () => logout() },
+                        { text: 'Cancel' }
+                    ])}>
                         <Image source={require('../assets/avatarUser.png')} style={styles.avatar} />
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.bottom}>
