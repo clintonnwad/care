@@ -1,65 +1,120 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
-import { React, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { React, useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
+import { calcNumYears, stringifyDate } from '../components/MomentStringify';
 
 function ListPatients(props) {
-    const numPatients = 3;
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
-    let [response, setResponse] = useState();
+    let [response, setResponse] = useState([]);
+    let [searchTerm, setSearchTerm] = useState();
 
+    // For Search on change text
+    const searchList = useCallback((text) => {
+        const tempList = [...response];
+
+        const newList = tempList.filter(list => {
+            const regex = new RegExp(`^${text}`, 'gi')
+
+            return list.first_name.match(regex)
+        })
+
+        setResponse(newList);
+
+    }, [response]);
+
+    // Fetch list of all patients from api
     useEffect(() => {
-        console.log("called");
         getAllPatients()
             .then(
                 (result) => {
                     setIsLoading(false);
                     setResponse(result);
-                    console.log(result);
                 }
             )
             .catch(function (error) {
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
+                if (props.testing !== undefined) {
+                    return;
                 }
-                console.log(error.config);
+                if (error.response) {
+                    Alert.alert(
+                        "System Error",
+                        "Unable to fetch data. Error Details: \n" +
+                        error.response.data + "\n\n" +
+                        error.response.status + "\n\n" +
+                        error.response.headers + "\n\n"
+                    );
+                } else if (error.request) {
+                    Alert.alert(
+                        "System Error",
+                        "Error requesting data. Error Details: \n" + error.request
+                    );
+                } else {
+                    Alert.alert(
+                        "System Error",
+                        "Error getting data. Error Details: \n" + error.message
+                    );
+                }
             });
     }, []);
 
-    // Here, we use Moment.js to format the date from JSON date to string
-    let stringifyDate = (date) => {
-        Moment.locale('en');
-        return (Moment(date).format('MMMM DD, YYYY'))
-    }
+    // Filter Emergency
+    const filterEmergency = useCallback(() => {
+        const tmpList = [...response];
+
+        const emergencyList = tmpList.filter(tmpList => tmpList.health_status == 'EMERGENCY' || tmpList.health_status == 'NEEDS_MONITORING');
+
+        setResponse(emergencyList);
+
+    }, [response]);
+
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <AppSearchInputField placeholder={"Search for patient here ..."} />
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 5 }}>
+                        {props.testing === undefined ?
+                            <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
+                            :
+                            <></>
+                        }
 
+                    </View>
 
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.filterView} >
+                            {props.testing === undefined ?
+                                <Ionicons name="filter-outline" size={20} color="white" onPress={() => filterEmergency()} />
+                                :
+                                <></>
+                            }
+
+                        </View>
+                    </View>
+                </View>
+
+            </View>
+
+            <View style={styles.bottom}>
                 {response !== undefined ? <FlatList data={response}
                     ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
                     keyExtractor={(item) => item._id + ""}
                     renderItem={(item) =>
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
                             <View style={[styles.listItem, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
                                     <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
                                 </View>
                                 <View style={styles.activityColumnTwo}>
                                     <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
-                                    <Text style={styles.activityDescTwo}>{item.item.gender}</Text>
+                                    <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
                                     <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
                                 </View>
                             </View>
@@ -68,12 +123,6 @@ function ListPatients(props) {
                 </FlatList>
                     :
                     <View><Text>Loading...</Text></View>}
-
-
-
-
-
-
             </View>
 
             <View style={styles.navArea}>
@@ -96,12 +145,12 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     top: {
-        flex: 1,
+        flex: 2,
         paddingStart: 20,
         paddingEnd: 20,
     },
     bottom: {
-        flex: 4,
+        flex: 10,
         paddingStart: 20,
         paddingEnd: 20,
     },
@@ -188,8 +237,17 @@ const styles = StyleSheet.create({
     },
     activityScrollView: {
         marginBottom: 20
+    },
+    filterView: {
+        backgroundColor: '#172A35',
+        borderRadius: 53 / 2,
+        width: 53,
+        height: 53,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        marginLeft: 10,
     }
-
 
 
 })

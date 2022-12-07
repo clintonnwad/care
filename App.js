@@ -9,6 +9,8 @@ import AppHome from './source/screens/AppHome';
 import ListPatients from './source/screens/ListPatients';
 import Login from './source/screens/Login';
 import PatientDetails from './source/screens/PatientDetails';
+import UpdatePatient from './source/screens/UpdatePatient';
+import UpdateTestResult from './source/screens/UpdateTestResult';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,9 @@ export default function App(props) {
           title: "Patient Details", headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', },
         }} />
         <Stack.Screen name="AddTestResult" component={AddTestResult} options={{ title: "Add Test Result", headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', }, headerLargeTitle: true }} />
+        <Stack.Screen name="UpdateTestResult" component={UpdateTestResult} options={{ title: "Update Test Result", headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', }, headerLargeTitle: true }} />
+
+        <Stack.Screen name="UpdatePatient" component={UpdatePatient} options={{ title: "Update Patient", headerTintColor: '#FFFFFF', headerStyle: { backgroundColor: '#0A161D', } }} />
       </Stack.Navigator>
     </NavigationContainer >
   );

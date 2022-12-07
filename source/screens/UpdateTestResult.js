@@ -2,30 +2,33 @@ import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { addTestResult } from '../api/api';
+import { updatePatientTestResult } from '../api/api';
 import AppButton from '../components/AppButton';
 import { AppTextInput } from '../components/AppInputField';
 
-function AddTestResult(props) {
+function UpdateTestResult(props) {
     const route = useRoute();
+    const testRecord = route.params.testRecord;
     const residentID = route.params.residentID;
-    let [systolic_pressure, setSystolicPressure] = useState('');
-    let [diastolic_pressure, setDiastolicPressure] = useState('');
-    let [heartbeat, setHeartBeat] = useState('');
-    let [respiratory_rate, setRespiratoryRate] = useState('');
-    let [blood_oxygen, setBloodOxygen] = useState('');
-    let [notes, setNotes] = useState('');
+    const testRecordId = testRecord._id;
+    let [systolic_pressure, setSystolicPressure] = useState(testRecord.systolic_pressure);
+    let [diastolic_pressure, setDiastolicPressure] = useState(testRecord.diastolic_pressure);
+    let [heartbeat, setHeartBeat] = useState(testRecord.heartbeat);
+    let [respiratory_rate, setRespiratoryRate] = useState(testRecord.respiratory_rate);
+    let [blood_oxygen, setBloodOxygen] = useState(testRecord.blood_oxygen);
+    let [notes, setNotes] = useState(testRecord.notes);
 
-    let createTestRecord = (e) => {
+
+    const updateTest = (e) => {
         if (!systolic_pressure || !diastolic_pressure || !heartbeat || !respiratory_rate || !blood_oxygen || !notes) {
             Alert.alert("Warning!", "You missed a record. You need to enter a value for all fields");
         }
         else {
             // Call the Add Test Result api function and pass the values to it
-            addTestResult(residentID, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes)
+            updatePatientTestResult(residentID, testRecordId, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes)
                 .then(
                     (result) => {
-                        Alert.alert("Patient Test Result", "Test Record Added Successfully", [
+                        Alert.alert("Patient Test Result", "Test Record Updated Successfully", [
                             {
                                 text: "Ok",
                                 onPress: () => props.navigation.navigate('PatientDetails', { residentID })
@@ -48,26 +51,26 @@ function AddTestResult(props) {
                 <Text style={styles.label}>Blood Pressure (mmHg)</Text>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <View style={styles.bloodPressureColOne}>
-                        <AppTextInput placeholder="Systolic Pressure" keyboardType='numeric' onChangeText={(systolic_pressure) => setSystolicPressure(systolic_pressure)} />
+                        <AppTextInput placeholder="Systolic Pressure" defaultValue={`${testRecord.systolic_pressure}`} keyboardType='numeric' onChangeText={(systolic_pressure) => setSystolicPressure(systolic_pressure)} />
                     </View>
                     <View style={styles.bloodPressureColTwo}>
-                        <AppTextInput placeholder="Diastolic Pressure" keyboardType='numeric' onChangeText={(diastolic_pressure) => setDiastolicPressure(diastolic_pressure)} />
+                        <AppTextInput placeholder="Diastolic Pressure" defaultValue={`${testRecord.diastolic_pressure}`} value={testRecord.diastolic_pressure} keyboardType='numeric' onChangeText={(diastolic_pressure) => setDiastolicPressure(diastolic_pressure)} />
                     </View>
                 </View>
 
                 <Text style={styles.label}>Heartbeat rate (BPM)</Text>
-                <AppTextInput placeholder="Enter beats per minute" keyboardType='numeric' onChangeText={(heartbeat) => setHeartBeat(heartbeat)} />
+                <AppTextInput placeholder="Enter beats per minute" defaultValue={`${testRecord.heartbeat}`} keyboardType='numeric' onChangeText={(heartbeat) => setHeartBeat(heartbeat)} />
 
                 <Text style={styles.label}>Respiratory rate</Text>
-                <AppTextInput placeholder="Enter beats per minute" keyboardType='numeric' onChangeText={(respiratory_rate) => setRespiratoryRate(respiratory_rate)} />
+                <AppTextInput placeholder="Enter beats per minute" defaultValue={`${testRecord.respiratory_rate}`} keyboardType='numeric' onChangeText={(respiratory_rate) => setRespiratoryRate(respiratory_rate)} />
 
                 <Text style={styles.label}>Blood oxygen level (%SpO2)</Text>
-                <AppTextInput placeholder="Enter breaths per minute" keyboardType='numeric' onChangeText={(blood_oxygen) => setBloodOxygen(blood_oxygen)} />
+                <AppTextInput placeholder="Enter breaths per minute" defaultValue={`${testRecord.blood_oxygen}`} keyboardType='numeric' onChangeText={(blood_oxygen) => setBloodOxygen(blood_oxygen)} />
 
                 <Text style={styles.label}>Notes/Observations</Text>
-                <AppTextInput placeholder="Enter note or any observations" multiline={true} numberOfLines={6} height={100} onChangeText={(notes) => setNotes(notes)} />
+                <AppTextInput placeholder="Enter note or any observations" defaultValue={testRecord.notes} multiline={true} numberOfLines={6} height={100} onChangeText={(notes) => setNotes(notes)} />
 
-                <AppButton text="Add Result" onPress={() => createTestRecord()} />
+                <AppButton text="Update" onPress={() => updateTest()} />
             </ScrollView>
 
 
@@ -75,7 +78,7 @@ function AddTestResult(props) {
     );
 }
 
-export default AddTestResult;
+export default UpdateTestResult;
 
 const styles = StyleSheet.create({
     container: {

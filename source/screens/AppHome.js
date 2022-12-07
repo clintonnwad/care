@@ -1,14 +1,13 @@
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 import Moment from 'moment';
-import { React, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { React, useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, Image, ImageBackground, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 
 import { getActivities } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
 
 function AppHome(props) {
-    const userActivity = 1;
     let [isLoading, setIsLoading] = useState(true);
     let [error, setError] = useState();
     let [response, setResponse] = useState();
@@ -16,28 +15,44 @@ function AppHome(props) {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        console.log("called");
         getActivities()
             .then(
                 (result) => {
                     setIsLoading(false);
                     setResponse(result);
-                    console.log(result);
                 }
             )
             .catch(function (error) {
                 if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
+                    Alert.alert(
+                        "System Error",
+                        "Unable to fetch data. Error Details: \n" +
+                        error.response.data + "\n\n" +
+                        error.response.status + "\n\n" +
+                        error.response.headers + "\n\n"
+                    );
                 } else if (error.request) {
-                    console.log(error.request);
+                    Alert.alert(
+                        "System Error",
+                        "Error requesting data. Error Details: \n" + error.request
+                    );
                 } else {
-                    console.log('Error', error.message);
+                    Alert.alert(
+                        "System Error",
+                        "Error getting data. Error Details: \n" + error.message
+                    );
                 }
-                console.log(error.config);
+                // console.log(error.config);
             });
+
     }, [props, isFocused]);
+
+    const logout = () => {
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
+    }
 
 
     // Here, we use Moment.js to format the date from JSON date to string
@@ -45,6 +60,10 @@ function AppHome(props) {
         Moment.locale('en');
         return (Moment(date).format('MMMM DD, YYYY HH:mm a'))
     }
+
+    const searchList = useCallback((search) => {
+        props.navigation.navigate("ListPatients", (search));
+    })
 
     return (
         <ImageBackground
@@ -54,48 +73,48 @@ function AppHome(props) {
             <View style={styles.top}>
                 <View style={styles.topRow}>
                     <View style={styles.topColumnOne}>
-                        <Text style={styles.intro}>Hi, Clinton</Text>
+                        <Text style={styles.intro}>Hi Clinton,</Text>
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>
-                    <View style={styles.topColumnTwo}>
+                    <TouchableOpacity style={styles.topColumnTwo} onPress={() => Alert.alert('Logout', 'Are you sure you want to logout?', [
+                        { text: 'Yes', onPress: () => logout() },
+                        { text: 'Cancel' }
+                    ])}>
                         <Image source={require('../assets/avatarUser.png')} style={styles.avatar} />
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.bottom}>
-                <AppSearchInputField placeholder="Search for patient here ..." />
+                <AppSearchInputField placeholder="Search for patient here ..." onChangeText={(search) => searchList(search)} />
 
                 <Text style={styles.tinyText}>Recent activities</Text>
 
-                {userActivity < 1 ?
+                {/* Display only the last 10 activities in a flatlist */}
+                {response !== undefined ? <FlatList data={response.slice(0, 10)}
+                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                    keyExtractor={(item) => item._id + ""}
+                    renderItem={(item) =>
+                        <View>
+                            <View style={[styles.activityView, styles.activityRow]}>
+                                <View style={styles.activityColumnOne}>
+                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                </View>
+                                <View style={styles.activityColumnTwo}>
+                                    <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
+                                    <Text style={styles.activityDescTwo}>{item.item.title}</Text>
+                                    <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    }>
+                </FlatList>
+                    :
                     <View style={styles.activityView}>
                         <ImageBackground source={require('../assets/no-activity.png')} style={styles.noActivityImage} />
                         <Text style={styles.noActivityHeader}>No Recent Activity</Text>
                         <Text style={styles.noActivityDesc}>Try adding a patient using the + button below</Text>
                     </View>
-                    :
-
-                    response !== undefined ? <FlatList data={response}
-                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
-                        keyExtractor={(item) => item._id + ""}
-                        renderItem={(item) =>
-                            <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails')}>
-                                <View style={[styles.activityView, styles.activityRow]}>
-                                    <View style={styles.activityColumnOne}>
-                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                    </View>
-                                    <View style={styles.activityColumnTwo}>
-                                        <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
-                                        <Text style={styles.activityDescTwo}>{item.item.title}</Text>
-                                        <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        }>
-                    </FlatList>
-                        :
-                        <Text>Loading...</Text>
                 }
             </View>
 
@@ -205,7 +224,7 @@ const styles = StyleSheet.create({
     activityAvatar: {
         height: 60,
         width: 60,
-        borderRadius: '50%',
+        borderRadius: 50,
     },
     activityColumnOne: {
         flex: 1,

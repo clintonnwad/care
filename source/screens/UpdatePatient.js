@@ -1,13 +1,19 @@
 import { StackActions } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { React, useEffect, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { addPatient } from '../api/api';
+import { updatePatient } from '../api/api';
 import AppButton from '../components/AppButton';
 import AppDropdown from '../components/AppDropdown';
 import { AppTextInput } from '../components/AppInputField';
+import { calcNumYears, stringifyDate, stringifyDateLong } from '../components/MomentStringify';
 
-function AddPatient(props) {
+function UpdatePatient(props) {
+    const route = useRoute();
+    const patient = route.params.response;
+    const residentID = patient._id;
+
     // For dropdown data
     const genderData = [
         { key: 'Male', value: 'Male' },
@@ -15,9 +21,9 @@ function AddPatient(props) {
         { key: 'Others', value: 'Others' },
     ];
 
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState();
 
-    let [firstname, setFirstname] = useState('');
+    let [firstname, setFirstname] = useState(patient.first_name);
     let [lastname, setLastname] = useState('');
     // let [gender, setGender] = useState("");
     let gender = "Male";
@@ -26,18 +32,16 @@ function AddPatient(props) {
     let [conditions, setConditions] = useState('');
 
 
-    let createPatient = (e) => {
+    let updatePatientRecord = (e) => {
         if (!firstname || !lastname || !gender || !dob || !allergies || !conditions) {
             Alert.alert("Incomplete data supplied", "You need to enter data for all fields. All fields are required");
         }
         else {
-            const popAction = StackActions.pop(1);
-
             // Call the addPatient function and pass values into it
-            addPatient(firstname, lastname, gender, dob, allergies, conditions)
+            updatePatient(firstname, lastname, gender, dob, allergies, conditions)
                 .then(
                     (result) => {
-                        Alert.alert("Successful", "Patient added sucessfully");
+                        Alert.alert("Successful", "Patient Details sucessfully");
                         props.navigation.navigate("AppHome");
                     }
                 )
@@ -79,10 +83,10 @@ function AddPatient(props) {
 
             <ScrollView>
                 <Text style={styles.label}>Firstname</Text>
-                <AppTextInput placeholder="Enter first name" onChangeText={(firstname) => setFirstname(firstname)} />
+                <AppTextInput placeholder="Enter first name" defaultValue={`${patient.first_name}`} onChangeText={(firstname) => setFirstname(firstname)} />
 
                 <Text style={styles.label}>Lastname</Text>
-                <AppTextInput placeholder="Enter last name" onChangeText={(lastname) => setLastname(lastname)} />
+                <AppTextInput placeholder="Enter last name" defaultValue={`${patient.last_name}`} onChangeText={(lastname) => setLastname(lastname)} />
 
                 <Text style={styles.label}>Gender</Text>
                 {props.testing === undefined ?
@@ -92,15 +96,15 @@ function AddPatient(props) {
                 }
 
                 <Text style={styles.label}>Date of Birth</Text>
-                <AppTextInput placeholder="Enter Date of Birth" onChangeText={(dob) => setDOB(dob)} />
+                <AppTextInput placeholder="Enter Date of Birth" defaultValue={stringifyDate(patient.dob)} onChangeText={(dob) => setDOB(dob)} />
 
                 <Text style={styles.label}>Allergies</Text>
-                <AppTextInput placeholder="Enter any allergies patient may have" onChangeText={(allergies) => setAllergies(allergies)} />
+                <AppTextInput placeholder="Enter any allergies patient may have" defaultValue={`${patient.allergies}`} onChangeText={(allergies) => setAllergies(allergies)} />
 
                 <Text style={styles.label}>Condition</Text>
-                <AppTextInput placeholder="Enter any illness or conditions patient may have" onChangeText={(conditions) => setConditions(conditions)} />
+                <AppTextInput placeholder="Enter any illness or conditions patient may have" defaultValue={`${patient.conditions}`} onChangeText={(conditions) => setConditions(conditions)} />
 
-                <AppButton text="Add Patient" onPress={() => createPatient()} />
+                <AppButton text="Update" onPress={() => updatePatientRecord()} />
 
                 <View style={{ marginBottom: 50 }}></View>
             </ScrollView>
@@ -110,8 +114,7 @@ function AddPatient(props) {
     );
 }
 
-export default AddPatient;
-
+export default UpdatePatient;
 const styles = StyleSheet.create({
     container: {
         flex: 1,

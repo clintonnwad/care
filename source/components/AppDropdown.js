@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 15,
         fontWeight: "500",
-        fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
         color: "#A8AFB3",
         width: '100%',
     },

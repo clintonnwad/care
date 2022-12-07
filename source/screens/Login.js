@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 
-import { getActivities, login } from '../api/api';
+import { login } from '../api/api';
 import AppButton from '../components/AppButton';
 import { AppTextInput } from '../components/AppInputField';
 
@@ -15,10 +15,10 @@ function Login(props) {
     }
     else {
       try {
-        await login(emailAdd, password)
-        props.navigation.navigate('AppHome')
+        await login(emailAdd, password);
+        props.navigation.replace('AppHome');
       } catch (error) {
-        Alert.alert("Login failed", error.response.data.message)
+        Alert.alert("Login failed", error.response.data.message);
       }
     }
 
@@ -42,7 +42,7 @@ function Login(props) {
         <View style={styles.loginContainer}>
           <Text style={styles.title}>Login</Text>
 
-          <AppTextInput placeholder="Email Address" onChangeText={(emailAdd) => setEmailAdd(emailAdd)} />
+          <AppTextInput placeholder="Email Address" autoCompleteType="email" keyboardType="emailAddress" autoCapitalize="none" onChangeText={(emailAdd) => setEmailAdd(emailAdd)} />
           <AppTextInput placeholder="Password" textContentType="password" secureTextEntry={true} onChangeText={(password) => setPassword(password)} />
 
           <AppButton text="Login" onPress={() => btnLogin()} />
