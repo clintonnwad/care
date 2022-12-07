@@ -123,7 +123,7 @@ function PatientDetails(props) {
                             />
                             <Text style={styles.readingText}>
                                 {latestTestResult ?
-                                    latestTestResult?.heartbeat :
+                                    latestTestResult?.respiratory_rate :
                                     '0'
                                 }
                             </Text>
@@ -136,7 +136,7 @@ function PatientDetails(props) {
                             />
                             <Text style={styles.readingText}>
                                 {latestTestResult ?
-                                    latestTestResult?.respiratory_rate :
+                                    latestTestResult?.heartbeat :
                                     '0'
                                 }
                             </Text>
@@ -218,7 +218,7 @@ function PatientDetails(props) {
                                                     <Image source={require('../assets/blood.png')} style={{ height: 20, width: 20 }} />
                                                 </View>
                                                 <View style={{ flex: 6, marginTop: 3 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.respiratory_rate} %SpO2</Text>
+                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.blood_oxygen} %SpO2</Text>
                                                 </View>
                                             </View>
 
@@ -231,7 +231,7 @@ function PatientDetails(props) {
                                                     <Image source={require('../assets/lungs.png')} style={{ height: 20, width: 20 }} />
                                                 </View>
                                                 <View style={{ flex: 5, marginTop: 4 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.heartbeat} Breaths/min</Text>
+                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.respiratory_rate} Breaths/min</Text>
                                                 </View>
                                             </View>
 
@@ -240,7 +240,7 @@ function PatientDetails(props) {
                                                     <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
                                                 </View>
                                                 <View style={{ flex: 5, marginTop: 4 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.blood_oxygen} Beats/min</Text>
+                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.heartbeat} Beats/min</Text>
                                                 </View>
                                             </View>
 
@@ -259,7 +259,7 @@ function PatientDetails(props) {
                                             <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
                                         </View>
                                         <View style={{ flex: 4 }}>
-                                            <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>Dr. {item.item.health_worker?.name}</Text>
+                                            <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>{item.item.health_worker?.name}</Text>
                                             <Text style={{ color: '#B4B4B4', fontSize: 13 }}>{item.item.health_worker?.job_title}</Text>
                                         </View>
                                     </View>
