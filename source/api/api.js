@@ -1,6 +1,5 @@
 import axios, { Axios } from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { Alert } from 'react-native';
 
 // const baseUrl = 'http://127.0.0.1:6000';
 const baseUrl = 'https://ancient-hollows-68245.herokuapp.com';
@@ -132,10 +131,6 @@ export async function deleteTestRecord(recordID, residentID) {
 
     let response = await axios.delete(`${baseUrl}/patients/${residentID}/tests/${recordID}`, { headers });
 
-    if (response.data !== 'OK') {
-        Alert.alert("System Error", "Oops! We were unable to delete this test record.");
-    }
-
 }
 
 export async function updatePatient(residentID, firstname, lastname, gender, dob, allergies, conditions) {
@@ -148,8 +143,6 @@ export async function updatePatient(residentID, firstname, lastname, gender, dob
         allergies: allergies,
         conditions: conditions
     }, { headers: headers })
-
-    console.log(response);
 
     return response.data;
 }

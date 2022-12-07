@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     avatar: {
         height: 80,
         width: 80,
-        borderRadius: '50%',
+        borderRadius: 50,
     },
     readingCol: {
         flex: 1,
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     nurseAvatar: {
         height: 45,
         width: 45,
-        borderRadius: '50%',
+        borderRadius: 50,
         marginTop: 7,
     },
     cardCol: {

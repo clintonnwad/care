@@ -89,7 +89,11 @@ function UpdatePatient(props) {
                 <AppTextInput placeholder="Enter last name" defaultValue={`${patient.last_name}`} onChangeText={(lastname) => setLastname(lastname)} />
 
                 <Text style={styles.label}>Gender</Text>
-                <AppDropdown data={genderData} onPress={(selected) => setGender(selected)} />
+                {props.testing === undefined ?
+                    <AppDropdown data={genderData} onPress={(selected) => setGender(selected)} />
+                    :
+                    <></>
+                }
 
                 <Text style={styles.label}>Date of Birth</Text>
                 <AppTextInput placeholder="Enter Date of Birth" defaultValue={stringifyDate(patient.dob)} onChangeText={(dob) => setDOB(dob)} />

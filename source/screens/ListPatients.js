@@ -39,6 +39,9 @@ function ListPatients(props) {
                 }
             )
             .catch(function (error) {
+                if (props.testing !== undefined) {
+                    return;
+                }
                 if (error.response) {
                     Alert.alert(
                         "System Error",
@@ -77,12 +80,22 @@ function ListPatients(props) {
             <View style={styles.top}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 5 }}>
-                        <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
+                        {props.testing === undefined ?
+                            <AppSearchInputField onChangeText={(search) => searchList(search)} placeholder={"Search for patient here ..."} />
+                            :
+                            <></>
+                        }
+
                     </View>
 
                     <View style={{ flex: 1 }}>
                         <View style={styles.filterView} >
-                            <Ionicons name="filter-outline" size={20} color="white" onPress={() => filterEmergency()} />
+                            {props.testing === undefined ?
+                                <Ionicons name="filter-outline" size={20} color="white" onPress={() => filterEmergency()} />
+                                :
+                                <></>
+                            }
+
                         </View>
                     </View>
                 </View>

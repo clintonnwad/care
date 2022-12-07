@@ -85,7 +85,11 @@ function AddPatient(props) {
                 <AppTextInput placeholder="Enter last name" onChangeText={(lastname) => setLastname(lastname)} />
 
                 <Text style={styles.label}>Gender</Text>
-                <AppDropdown data={genderData} onPress={(selected) => setGender(selected)} />
+                {props.testing === undefined ?
+                    <AppDropdown data={genderData} onPress={(selected) => setGender(selected)} />
+                    :
+                    <></>
+                }
 
                 <Text style={styles.label}>Date of Birth</Text>
                 <AppTextInput placeholder="Enter Date of Birth" onChangeText={(dob) => setDOB(dob)} />
