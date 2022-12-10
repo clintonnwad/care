@@ -86,29 +86,32 @@ function AppHome(props) {
                 </View>
             </View>
             <View style={styles.bottom}>
-                <AppSearchInputField placeholder="Search for patient here ..." onChangeText={(search) => searchList(search)} />
+                <TouchableOpacity onPress={() => props.navigation.navigate('ListPatients')}>
+                    <AppSearchInputField editable={false} placeholder="Search for patient here ..." />
+                </TouchableOpacity>
 
-                <Text style={styles.tinyText}>Recent activities</Text>
+                <Text style={styles.tinyText} onPress={() => Alert.alert("Hello")}>Recent activities</Text>
 
                 {/* Display only the last 10 activities in a flatlist */}
-                {response !== undefined ? <FlatList data={response.slice(0, 10)}
-                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
-                    keyExtractor={(item) => item._id + ""}
-                    renderItem={(item) =>
-                        <View>
-                            <View style={[styles.activityView, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
-                                    <Text style={styles.activityDescTwo}>{item.item.title}</Text>
-                                    <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
+                {response !== undefined ?
+                    <FlatList data={response.slice(0, 10)}
+                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                        keyExtractor={(item) => item._id + ""}
+                        renderItem={(item) =>
+                            <View>
+                                <View style={[styles.activityView, styles.activityRow]}>
+                                    <View style={styles.activityColumnOne}>
+                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                    </View>
+                                    <View style={styles.activityColumnTwo}>
+                                        <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
+                                        <Text style={styles.activityDescTwo}>{item.item.title}</Text>
+                                        <Text style={styles.activityDescThree}>{stringifyDate(item.item.createdAt)}</Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    }>
-                </FlatList>
+                        }>
+                    </FlatList>
                     :
                     <View style={styles.activityView}>
                         <ImageBackground source={require('../assets/no-activity.png')} style={styles.noActivityImage} />

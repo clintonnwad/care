@@ -1,8 +1,8 @@
 import axios, { Axios } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const baseUrl = 'http://127.0.0.1:6000';
-// const baseUrl = 'https://ancient-hollows-68245.herokuapp.com';
+// const baseUrl = 'http://127.0.0.1:6000';
+const baseUrl = 'https://ancient-hollows-68245.herokuapp.com';
 
 let token;
 
