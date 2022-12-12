@@ -1,4 +1,5 @@
 import { StackActions } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { React, useEffect, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -25,16 +26,34 @@ function AddPatient(props) {
     let [allergies, setAllergies] = useState('');
     let [conditions, setConditions] = useState('');
 
+    // For avatar
+    const [avatar, setAvatar] = useState(null);
+
+    const selectImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setAvatar(result.uri);
+            console.log(result.uri);
+        }
+    };
+
 
     let createPatient = (e) => {
-        if (!firstname || !lastname || !gender || !dob || !allergies || !conditions) {
+        if (!avatar || !firstname || !lastname || !gender || !dob || !allergies || !conditions) {
             Alert.alert("Incomplete data supplied", "You need to enter data for all fields. All fields are required");
         }
         else {
             const popAction = StackActions.pop(1);
 
             // Call the addPatient function and pass values into it
-            addPatient(firstname, lastname, gender, dob, allergies, conditions)
+            addPatient(avatar, firstname, lastname, gender, dob, allergies, conditions)
                 .then(
                     (result) => {
                         Alert.alert("Successful", "Patient added sucessfully");
@@ -69,11 +88,19 @@ function AddPatient(props) {
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
             <View style={styles.uploadAvatarView}>
-                <TouchableOpacity>
-                    <Image
-                        source={require("../assets/upload-avatar.png")}
-                        style={styles.uploadAvatar}
-                    />
+                <TouchableOpacity onPress={selectImage}>
+                    {avatar !== null ?
+                        <Image
+                            source={{ uri: avatar }}
+                            style={styles.newAvatar}
+                        />
+                        :
+                        <Image
+                            source={require("../assets/upload-avatar.png")}
+                            style={styles.uploadAvatar}
+                        />
+
+                    }
                 </TouchableOpacity>
             </View>
 
@@ -128,11 +155,17 @@ const styles = StyleSheet.create({
         height: 120,
         width: 113,
         marginTop: 10,
-        marginBottom: 20
+        marginBottom: 20,
     },
     label: {
         color: '#FFFFFF',
         marginTop: 15,
     },
-
+    newAvatar: {
+        height: 120,
+        width: 113,
+        borderRadius: 200 / 2,
+        marginTop: 10,
+        marginBottom: 20,
+    }
 })

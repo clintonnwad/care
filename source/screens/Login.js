@@ -8,6 +8,7 @@ import { AppTextInput } from '../components/AppInputField';
 function Login(props) {
   const [emailAdd, setEmailAdd] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const btnLogin = async (e) => {
     if (!emailAdd || !password) {
@@ -15,13 +16,16 @@ function Login(props) {
     }
     else {
       try {
+        setIsLoading(true);
         await login(emailAdd, password);
         props.navigation.replace('AppHome');
       } catch (error) {
         Alert.alert("Login failed", error.response.data.message);
       }
+      finally {
+        setIsLoading(false);
+      }
     }
-
 
   }
 
@@ -45,7 +49,7 @@ function Login(props) {
           <AppTextInput placeholder="Email Address" autoCompleteType="email" keyboardType="emailAddress" autoCapitalize="none" onChangeText={(emailAdd) => setEmailAdd(emailAdd)} />
           <AppTextInput placeholder="Password" textContentType="password" secureTextEntry={true} onChangeText={(password) => setPassword(password)} />
 
-          <AppButton text="Login" onPress={() => btnLogin()} />
+          <AppButton text="Login" onPress={() => btnLogin()} loading={isLoading} />
 
           <Text style={styles.forgotPass}>Forgot password?</Text>
           <Text style={styles.signUp}>Don't have an account?

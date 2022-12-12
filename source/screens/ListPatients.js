@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
@@ -103,26 +103,28 @@ function ListPatients(props) {
             </View>
 
             <View style={styles.bottom}>
-                {response !== undefined ? <FlatList data={response}
-                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
-                    keyExtractor={(item) => item._id + ""}
-                    renderItem={(item) =>
-                        <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
-                            <View style={[styles.listItem, styles.activityRow]}>
-                                <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
-                                </View>
-                                <View style={styles.activityColumnTwo}>
-                                    <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
-                                    <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
-                                    <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    }>
-                </FlatList>
+                {response == undefined || isLoading == true ?
+                    <ActivityIndicator />
                     :
-                    <View><Text>Loading...</Text></View>}
+                    <FlatList data={response}
+                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                        keyExtractor={(item) => item._id + ""}
+                        renderItem={(item) =>
+                            <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
+                                <View style={[styles.listItem, styles.activityRow]}>
+                                    <View style={styles.activityColumnOne}>
+                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                    </View>
+                                    <View style={styles.activityColumnTwo}>
+                                        <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                        <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
+                                        <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        }>
+                    </FlatList>
+                }
             </View>
 
             <View style={styles.navArea}>

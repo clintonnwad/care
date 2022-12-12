@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 function AppButton(props) {
     return (
@@ -11,7 +11,16 @@ function AppButton(props) {
                 colors={['#025AC9', '#532BED']}
                 style={styles.linearGradient}
             >
-                <Text style={[props.style, styles.button]}>{props.text}</Text>
+                <Text style={[props.style, styles.button]}>
+                    {props.loading == true ?
+                        (
+                            <ActivityIndicator style={styles.activityIndicator} />
+                        )
+                        :
+                        props.text
+                    }
+
+                </Text>
             </LinearGradient>
         </TouchableOpacity>
     );
@@ -30,6 +39,11 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 25,
         marginTop: 20,
+    },
+    activityIndicator: {
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
     }
 })
 
