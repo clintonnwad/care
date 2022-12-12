@@ -2,11 +2,15 @@ import { StackActions } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { React, useEffect, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 import { addPatient } from '../api/api';
 import AppButton from '../components/AppButton';
+import AppDate from '../components/AppDate';
 import AppDropdown from '../components/AppDropdown';
 import { AppTextInput } from '../components/AppInputField';
+import { stringifyDate } from '../components/MomentStringify';
 
 function AddPatient(props) {
     // For dropdown data
@@ -42,6 +46,25 @@ function AddPatient(props) {
             setAvatar(result.uri);
             console.log(result.uri);
         }
+    };
+
+    // Date Picker
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        // Convert date using Moment.js
+        let formattedDate = stringifyDate(date);
+
+        setDOB(formattedDate);
+        hideDatePicker();
     };
 
 
@@ -118,8 +141,18 @@ function AddPatient(props) {
                     <></>
                 }
 
-                <Text style={styles.label}>Date of Birth</Text>
-                <AppTextInput placeholder="Enter Date of Birth" onChangeText={(dob) => setDOB(dob)} />
+                <Text style={styles.label} onPress={showDatePicker}>Date of Birth</Text>
+                <TouchableOpacity onPress={showDatePicker}>
+                    <AppDate placeholder="Enter Date of Birth" text={dob} />
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                    date={new Date()}
+                    isDarkModeEnabled={true}
+                />
 
                 <Text style={styles.label}>Allergies</Text>
                 <AppTextInput placeholder="Enter any allergies patient may have" onChangeText={(allergies) => setAllergies(allergies)} />
