@@ -87,7 +87,15 @@ function PatientDetails(props) {
                         <View style={styles.topSegmentOneRow}>
                             <TouchableOpacity style={styles.topSegmentOneColumnFirst} onPress={() => props.navigation.navigate('UpdatePatient', { response })}>
                                 <View>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.avatar} />
+                                    {response.avatar == undefined ?
+                                        <Image
+                                            source={require("../assets/upload-avatar.png")}
+                                            style={styles.uploadAvatar}
+                                        />
+                                        :
+                                        <Image source={{ uri: response.avatar }} style={styles.avatar} />
+
+                                    }
                                 </View>
                             </TouchableOpacity>
                             <View style={styles.topSegmentOneColumnSecond}>
@@ -393,5 +401,10 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         borderBottomRightRadius: 8,
         padding: 5,
-    }
+    },
+    uploadAvatar: {
+        height: 80,
+        width: 75,
+        marginBottom: 20
+    },
 })

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -14,6 +14,7 @@ function ListPatients(props) {
     let [error, setError] = useState();
     let [response, setResponse] = useState([]);
     let [searchTerm, setSearchTerm] = useState();
+    const isFocused = useIsFocused();
 
     // For Search on change text
     const searchList = useCallback((text) => {
@@ -27,7 +28,7 @@ function ListPatients(props) {
 
         setResponse(newList);
 
-    }, [response]);
+    }, []);
 
     // Fetch list of all patients from api
     useEffect(() => {
@@ -62,7 +63,7 @@ function ListPatients(props) {
                     );
                 }
             });
-    }, []);
+    }, [props, isFocused]);
 
     // Filter Emergency
     const filterEmergency = useCallback(() => {
@@ -113,7 +114,12 @@ function ListPatients(props) {
                             <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
                                 <View style={[styles.listItem, styles.activityRow]}>
                                     <View style={styles.activityColumnOne}>
-                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                        {item.item.avatar !== undefined ?
+                                            <Image source={{ uri: item.item.avatar }} style={styles.activityAvatar} />
+                                            :
+                                            <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                        }
+
                                     </View>
                                     <View style={styles.activityColumnTwo}>
                                         <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>

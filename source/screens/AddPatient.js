@@ -2,8 +2,8 @@ import { StackActions } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { React, useEffect, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RNImgToBase64 } from 'react-native-image-base64';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 import { addPatient } from '../api/api';
 import AppButton from '../components/AppButton';
@@ -42,9 +42,15 @@ function AddPatient(props) {
             quality: 1,
         });
 
-        if (!result.canceled) {
-            setAvatar(result.uri);
-            console.log(result.uri);
+        if (result.uri !== undefined) {
+            setAvatar(encode(result.uri));
+
+
+            // RNImgToBase64.getBase64String(result.uri)
+            //     .then(
+            //         base64String => console.log(base64String)
+            //     )
+            //     .catch(err => console.log(err));
         }
     };
 

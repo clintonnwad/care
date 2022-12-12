@@ -65,7 +65,7 @@ export async function addPatient(avatar, firstname, lastname, gender, dob, aller
         firstname: firstname,
         lastname: lastname,
         gender: gender,
-        dob: dob + "T17:08:13.930Z",
+        dob: dob,
         allergies: allergies,
         conditions: conditions
     }, { headers: headers })
@@ -134,16 +134,19 @@ export async function deleteTestRecord(recordID, residentID) {
 
 }
 
-export async function updatePatient(residentID, firstname, lastname, gender, dob, allergies, conditions) {
+export async function updatePatient(residentID, avatar, firstname, lastname, gender, dob, allergies, conditions) {
     let headers = await getHeaders();
     let response = await axios.put(`${baseUrl}/patients/${residentID}`, {
-        firstname: firstname,
-        lastname: lastname,
+        avatar: avatar,
+        first_name: firstname,
+        last_name: lastname,
         gender: gender,
-        dob: dob + "T17:08:13.930Z",
+        dob: dob,
         allergies: allergies,
         conditions: conditions
     }, { headers: headers })
 
     return response.data;
+
+    // console.log(residentID);
 }

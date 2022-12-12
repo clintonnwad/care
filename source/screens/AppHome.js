@@ -42,7 +42,6 @@ function AppHome(props) {
                         "Error getting data. Error Details: \n" + error.message
                     );
                 }
-                // console.log(error.config);
             });
 
     }, [props, isFocused]);
@@ -98,7 +97,14 @@ function AppHome(props) {
                         <View>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
-                                    <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                    {item.item.image === undefined ?
+                                        <Image
+                                            source={require("../assets/patient-1.png")}
+                                            style={styles.uploadAvatar}
+                                        />
+                                        :
+                                        <Image source={{ uri: item.item.image }} style={styles.activityAvatar} />
+                                    }
                                 </View>
                                 <View style={styles.activityColumnTwo}>
                                     <Text style={styles.activityDescOne}>{item.item.activity_type.replace('_', ' ')}</Text>
@@ -248,8 +254,11 @@ const styles = StyleSheet.create({
     },
     activityScrollView: {
         marginBottom: 20
-    }
-
+    },
+    uploadAvatar: {
+        height: 60,
+        width: 60,
+    },
 
 
 })
