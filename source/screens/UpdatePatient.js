@@ -74,8 +74,6 @@ function UpdatePatient(props) {
     };
 
 
-
-
     let updatePatientRecord = (e) => {
         if (!avatar || !firstname || !lastname || !gender || !dob || !allergies || !conditions) {
             Alert.alert("Incomplete data supplied", "You need to enter data for all fields. All fields are required");

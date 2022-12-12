@@ -1,6 +1,6 @@
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useCallback, useIsFocused, useRoute } from '@react-navigation/native';
 import { React, useEffect, useState } from 'react';
-import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, ScrollView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { deleteTestRecord, getPatientDetails } from '../api/api';
@@ -16,7 +16,12 @@ function PatientDetails(props) {
     let [patientTests, setPatientTests] = useState([]);
     let [latestTestResult, setLatestTestResult] = useState([]);
     let [update, setUpdate] = useState();
+    const dateUpdated = new Date();
     const isFocused = useIsFocused();
+
+    const del = () => {
+        setUpdate(new Date());
+    }
 
     useEffect(() => {
         getPatientDetails(residentID)
@@ -53,7 +58,7 @@ function PatientDetails(props) {
                     );
                 }
             });
-    }, [props, update, isFocused]);
+    }, [props, update]);
 
     // Right Swipe
     const rightSwipe = (recordID, residentID) => {
@@ -72,223 +77,237 @@ function PatientDetails(props) {
         )
     }
 
-    const deleteTest = (recordID, residentID) => {
-        let delResponse = deleteTestRecord(recordID, residentID);
-        setUpdate('updated');
+    const deleteTest = async (recordID, residentID) => {
+        del();
+        await deleteTestRecord(recordID, residentID);
+        setUpdate(dateUpdated);
     }
-
 
 
     return (
         <View style={styles.container}>
-            <View style={styles.top}>
-                <View style={styles.topSegmentGroup}>
-                    <View style={styles.topSegmentOne}>
-                        <View style={styles.topSegmentOneRow}>
-                            <TouchableOpacity style={styles.topSegmentOneColumnFirst} onPress={() => props.navigation.navigate('UpdatePatient', { response })}>
-                                <View>
-                                    {response.avatar == undefined ?
-                                        <Image
-                                            source={require("../assets/upload-avatar.png")}
-                                            style={styles.uploadAvatar}
-                                        />
-                                        :
-                                        <Image source={{ uri: response.avatar }} style={styles.avatar} />
+            {isLoading == true ?
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator />
+                </View>
 
-                                    }
-                                </View>
-                            </TouchableOpacity>
-                            <View style={styles.topSegmentOneColumnSecond}>
-                                {(
-                                    <View>
-                                        <Text style={{ fontSize: 22, color: '#FFFFFF', marginTop: 6, fontWeight: '600' }}>{response?.first_name + ' ' + response?.last_name} </Text>
-                                        <Text style={{ fontSize: 16, color: '#FFFFFF', marginTop: 3 }}>{calcNumYears(response.dob) + ' old - ' + response.gender}</Text>
-                                        <Text style={{ fontSize: 13, color: '#5298EB', marginTop: 3 }}>Joined {stringifyDate(response.createdAt)}</Text>
+                :
+
+                <View style={styles.innerContainer}>
+                    <View style={styles.top}>
+                        <View style={styles.topSegmentGroup}>
+                            <View style={styles.topSegmentOne}>
+                                <View style={styles.topSegmentOneRow}>
+                                    <TouchableOpacity style={styles.topSegmentOneColumnFirst} onPress={() => props.navigation.navigate('UpdatePatient', { response })}>
+                                        <View>
+                                            {response.avatar == undefined ?
+                                                <Image
+                                                    source={require("../assets/upload-avatar.png")}
+                                                    style={styles.uploadAvatar}
+                                                />
+                                                :
+                                                <Image source={{ uri: response.avatar }} style={styles.avatar} />
+
+                                            }
+                                        </View>
+                                    </TouchableOpacity>
+                                    <View style={styles.topSegmentOneColumnSecond}>
+                                        {(
+                                            <View>
+                                                <Text style={{ fontSize: 22, color: '#FFFFFF', marginTop: 6, fontWeight: '600' }}>{response?.first_name + ' ' + response?.last_name} </Text>
+                                                <Text style={{ fontSize: 16, color: '#FFFFFF', marginTop: 3 }}>{calcNumYears(response.dob) + ' old - ' + response.gender}</Text>
+                                                <Text style={{ fontSize: 13, color: '#5298EB', marginTop: 3 }}>Joined {stringifyDate(response.createdAt)}</Text>
+                                            </View>
+                                        )}
                                     </View>
-                                )}
+                                </View>
+                            </View>
+
+                            <View style={styles.topSegmentTwo}>
+                                <View style={styles.readingCol}>
+                                    <Image
+                                        source={require('../assets/patientDetailsOne.png')}
+                                        style={styles.readingImage}
+                                    />
+                                    <Text style={styles.readingText}>
+                                        {latestTestResult ?
+                                            latestTestResult?.systolic_pressure + '/' + latestTestResult?.diastolic_pressure :
+                                            '0/0'
+                                        }
+                                    </Text>
+                                </View>
+
+                                <View style={styles.readingCol}>
+                                    <Image
+                                        source={require('../assets/patientDetailsTwo.png')}
+                                        style={styles.readingImage}
+                                    />
+                                    <Text style={styles.readingText}>
+                                        {latestTestResult ?
+                                            latestTestResult?.respiratory_rate :
+                                            '0'
+                                        }
+                                    </Text>
+                                </View>
+
+                                <View style={styles.readingCol}>
+                                    <Image
+                                        source={require('../assets/patientDetailsThree.png')}
+                                        style={styles.readingImage}
+                                    />
+                                    <Text style={styles.readingText}>
+                                        {latestTestResult ?
+                                            latestTestResult?.heartbeat :
+                                            '0'
+                                        }
+                                    </Text>
+                                </View>
+
+                                <View style={styles.readingCol}>
+                                    <Image
+                                        source={require('../assets/patientDetailsFour.png')}
+                                        style={styles.readingImage}
+                                    />
+                                    <Text style={styles.readingText}>
+                                        {latestTestResult ?
+                                            latestTestResult?.blood_oxygen :
+                                            '0'
+                                        }
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    <View style={styles.topSegmentTwo}>
-                        <View style={styles.readingCol}>
-                            <Image
-                                source={require('../assets/patientDetailsOne.png')}
-                                style={styles.readingImage}
-                            />
-                            <Text style={styles.readingText}>
-                                {latestTestResult ?
-                                    latestTestResult?.systolic_pressure + '/' + latestTestResult?.diastolic_pressure :
-                                    '0/0'
-                                }
-                            </Text>
+
+                    <View style={styles.bottom}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate("AddTestResult", { residentID })}>
+                            <View style={{ padding: 10, backgroundColor: '#2B2BED', marginTop: 20, borderRadius: 5 }} >
+                                <Text style={{ color: '#FFFFFF', textAlign: 'center', fontWeight: '600' }}>Add Test Result</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <View style={[styles.card]}>
+                            <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>Allergies:</Text>
+                            <Text style={{ color: '#FFFFFF', fontWeight: '300', marginTop: 3 }}>{response.allergies}</Text>
+
+                            <View style={styles.horizontalLine} />
+                            <Text style={{ color: '#FFFFFF', fontWeight: '700', }}>Conditions:</Text>
+                            <Text style={{ color: '#FFFFFF', fontWeight: '300', marginTop: 3 }}>{response.conditions}</Text>
                         </View>
 
-                        <View style={styles.readingCol}>
-                            <Image
-                                source={require('../assets/patientDetailsTwo.png')}
-                                style={styles.readingImage}
-                            />
-                            <Text style={styles.readingText}>
-                                {latestTestResult ?
-                                    latestTestResult?.respiratory_rate :
-                                    '0'
-                                }
-                            </Text>
+
+
+                        {/* ***************************************** 
+                            TEST RESULT HISTORY
+                        ******************************************** */}
+                        <View style={{ marginTop: 20 }}>
+                            <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>Test Results History</Text>
                         </View>
-
-                        <View style={styles.readingCol}>
-                            <Image
-                                source={require('../assets/patientDetailsThree.png')}
-                                style={styles.readingImage}
-                            />
-                            <Text style={styles.readingText}>
-                                {latestTestResult ?
-                                    latestTestResult?.heartbeat :
-                                    '0'
-                                }
-                            </Text>
-                        </View>
-
-                        <View style={styles.readingCol}>
-                            <Image
-                                source={require('../assets/patientDetailsFour.png')}
-                                style={styles.readingImage}
-                            />
-                            <Text style={styles.readingText}>
-                                {latestTestResult ?
-                                    latestTestResult?.blood_oxygen :
-                                    '0'
-                                }
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-
-
-            <View style={styles.bottom}>
-                <TouchableOpacity onPress={() => props.navigation.navigate("AddTestResult", { residentID })}>
-                    <View style={{ padding: 10, backgroundColor: '#2B2BED', marginTop: 20, borderRadius: 5 }} >
-                        <Text style={{ color: '#fff', textAlign: 'center', fontWeight: '600' }}>Add Test Result</Text>
-                    </View>
-                </TouchableOpacity>
-
-                <View style={[styles.card]}>
-                    <Text style={{ color: '#fff', fontWeight: '700' }}>Allergies:</Text>
-                    <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>{response.allergies}</Text>
-
-                    <View style={styles.horizontalLine} />
-                    <Text style={{ color: '#fff', fontWeight: '700', }}>Conditions:</Text>
-                    <Text style={{ color: '#fff', fontWeight: '300', marginTop: 3 }}>{response.conditions}</Text>
-                </View>
-
-
-
-                {/* ***************************************** 
-                        TEST RESULT HISTORY
-                 ******************************************** */}
-                <View style={{ marginTop: 20 }}>
-                    <Text style={{ color: '#fff', fontWeight: '700' }}>Test Results History</Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                    {patientTests !== undefined ? <FlatList
-                        data={patientTests.reverse()}
-                        ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
-                        keyExtractor={(item) => item._id + ""}
-                        renderItem={(item) =>
-                            <Swipeable renderRightActions={() => rightSwipe(item.item._id, residentID)}>
-                                <TouchableOpacity
-                                    style={
-                                        item.item.status == 'EMERGENCY' ?
-                                            [styles.resultsCard, styles.danger] :
-                                            [styles.resultsCard, styles.safe]
-                                    }
-                                    onPress={() => props.navigation.navigate('UpdateTestResult', { testRecord: item.item, residentID: residentID })}>
-                                    <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>{stringifyDateLong(item.item.createdAt)}</Text>
-
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View style={{ flex: 1, paddingTop: 9, paddingBottom: 9 }}>
-                                            <Text style={{ fontWeight: '700', color: '#798083' }}>Results</Text>
-
-                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                <View style={{ flex: 1 }}>
-                                                    <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
-                                                </View>
-                                                <View style={{ flex: 6, marginTop: 3 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.systolic_pressure + '/' + item.item.diastolic_pressure} mmHg</Text>
-                                                </View>
-                                            </View>
-
-                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                <View style={{ flex: 1 }}>
-                                                    <Image source={require('../assets/blood.png')} style={{ height: 20, width: 20 }} />
-                                                </View>
-                                                <View style={{ flex: 6, marginTop: 3 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.blood_oxygen} %SpO2</Text>
-                                                </View>
-                                            </View>
-
-                                        </View>
-
-
-                                        <View style={{ flex: 1, paddingTop: 25, paddingBottom: 9 }}>
-                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                <View style={{ flex: 1 }}>
-                                                    <Image source={require('../assets/lungs.png')} style={{ height: 20, width: 20 }} />
-                                                </View>
-                                                <View style={{ flex: 5, marginTop: 4 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.respiratory_rate} Breaths/min</Text>
-                                                </View>
-                                            </View>
-
-                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                <View style={{ flex: 1 }}>
-                                                    <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
-                                                </View>
-                                                <View style={{ flex: 5, marginTop: 4 }}>
-                                                    <Text style={{ color: '#FFFFFF' }}>{item.item.heartbeat} Beats/min</Text>
-                                                </View>
-                                            </View>
-
-                                        </View>
-                                    </View>
-
-                                    <View style={{ marginTop: 7 }}>
-                                        <Text style={{ fontWeight: '700', color: '#798083' }}>Notes/Observations</Text>
-                                        <Text style={{ color: '#FFFFFF', marginTop: 5 }}>{item.item.notes}</Text>
-                                    </View>
-
-                                    <View style={styles.horizontalLine} />
-
-                                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                                        <View style={{ flex: 1 }}>
-                                            <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
-                                        </View>
-                                        <View style={{ flex: 4 }}>
-                                            <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>{item.item.health_worker?.name}</Text>
-                                            <Text style={{ color: '#B4B4B4', fontSize: 13 }}>{item.item.health_worker?.job_title}</Text>
-                                        </View>
-                                    </View>
-
-                                </TouchableOpacity>
-                            </Swipeable>
-                        }>
-
-                    </FlatList>
-
-                        :
 
                         <View style={{ flex: 1 }}>
-                            <Text style={{ color: '#fff' }}>Loading...</Text>
+                            {patientTests === undefined || patientTests.length < 1 ?
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image source={require('../assets/stethoscope.png')} style={styles.noTestImage} />
+                                    <Text style={{ color: '#90989D', fontWeight: '700', fontSize: 17 }}>No Test Result</Text>
+                                    <Text style={{ color: '#90989D', fontSize: 13, marginTop: 7 }}>Tap the 'Add Test Result' button</Text>
+                                    <Text style={{ color: '#90989D', fontSize: 13 }}>to add a record</Text>
+                                </View>
+
+                                :
+
+                                <FlatList
+                                    data={patientTests.reverse()}
+                                    ItemSeparatorComponent={FlatList.ItemSeparatorComponent}
+                                    keyExtractor={(item) => item._id + ""}
+                                    renderItem={(item) =>
+                                        <Swipeable renderRightActions={() => rightSwipe(item.item._id, residentID)}>
+                                            <TouchableOpacity
+                                                style={
+                                                    item.item.status == 'EMERGENCY' ?
+                                                        [styles.resultsCard, styles.danger] :
+                                                        [styles.resultsCard, styles.safe]
+                                                }
+                                                onPress={() => props.navigation.navigate('UpdateTestResult', { testRecord: item.item, residentID: residentID })}>
+                                                <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>{stringifyDateLong(item.item.createdAt)}</Text>
+
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{ flex: 1, paddingTop: 9, paddingBottom: 9 }}>
+                                                        <Text style={{ fontWeight: '700', color: '#798083' }}>Results</Text>
+
+                                                        <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                            <View style={{ flex: 1 }}>
+                                                                <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                                            </View>
+                                                            <View style={{ flex: 6, marginTop: 3 }}>
+                                                                <Text style={{ color: '#FFFFFF' }}>{item.item.systolic_pressure + '/' + item.item.diastolic_pressure} mmHg</Text>
+                                                            </View>
+                                                        </View>
+
+                                                        <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                            <View style={{ flex: 1 }}>
+                                                                <Image source={require('../assets/blood.png')} style={{ height: 20, width: 20 }} />
+                                                            </View>
+                                                            <View style={{ flex: 6, marginTop: 3 }}>
+                                                                <Text style={{ color: '#FFFFFF' }}>{item.item.blood_oxygen} %SpO2</Text>
+                                                            </View>
+                                                        </View>
+
+                                                    </View>
+
+
+                                                    <View style={{ flex: 1, paddingTop: 25, paddingBottom: 9 }}>
+                                                        <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                            <View style={{ flex: 1 }}>
+                                                                <Image source={require('../assets/lungs.png')} style={{ height: 20, width: 20 }} />
+                                                            </View>
+                                                            <View style={{ flex: 5, marginTop: 4 }}>
+                                                                <Text style={{ color: '#FFFFFF' }}>{item.item.respiratory_rate} Breaths/min</Text>
+                                                            </View>
+                                                        </View>
+
+                                                        <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                            <View style={{ flex: 1 }}>
+                                                                <Image source={require('../assets/heartbeat.png')} style={{ height: 20, width: 20 }} />
+                                                            </View>
+                                                            <View style={{ flex: 5, marginTop: 4 }}>
+                                                                <Text style={{ color: '#FFFFFF' }}>{item.item.heartbeat} Beats/min</Text>
+                                                            </View>
+                                                        </View>
+
+                                                    </View>
+                                                </View>
+
+                                                <View style={{ marginTop: 7 }}>
+                                                    <Text style={{ fontWeight: '700', color: '#798083' }}>Notes/Observations</Text>
+                                                    <Text style={{ color: '#FFFFFF', marginTop: 5 }}>{item.item.notes}</Text>
+                                                </View>
+
+                                                <View style={styles.horizontalLine} />
+
+                                                <View style={{ flex: 1, flexDirection: 'row' }}>
+                                                    <View style={{ flex: 1 }}>
+                                                        <Image source={require('../assets/nurse.png')} style={styles.nurseAvatar} />
+                                                    </View>
+                                                    <View style={{ flex: 4 }}>
+                                                        <Text style={{ marginTop: 10, fontSize: 16, color: '#fff', fontWeight: '500' }}>{item.item.health_worker?.name}</Text>
+                                                        <Text style={{ color: '#B4B4B4', fontSize: 13 }}>{item.item.health_worker?.job_title}</Text>
+                                                    </View>
+                                                </View>
+
+                                            </TouchableOpacity>
+                                        </Swipeable>
+                                    }>
+
+                                </FlatList>
+
+
+                            }
+
                         </View>
-
-
-                    }
-
+                    </View >
                 </View>
-            </View >
+            }
         </View >
     );
 }
@@ -302,6 +321,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         padding: 20,
+    },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: '#0A161D',
+        width: '100%',
+        height: '100%',
     },
     top: {
         flex: 1,
@@ -402,9 +427,13 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 8,
         padding: 5,
     },
+    noTestImage: {
+        height: 100,
+        width: 100,
+        marginBottom: 10
+    },
     uploadAvatar: {
-        height: 80,
-        width: 75,
-        marginBottom: 20
+        height: 85,
+        width: 80,
     },
 })

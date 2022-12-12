@@ -72,7 +72,7 @@ function AppHome(props) {
             <View style={styles.top}>
                 <View style={styles.topRow}>
                     <View style={styles.topColumnOne}>
-                        <Text style={styles.intro}>Hi Clinton,</Text>
+                        <Text style={styles.intro}>Hi John,</Text>
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>
@@ -85,7 +85,9 @@ function AppHome(props) {
                 </View>
             </View>
             <View style={styles.bottom}>
-                <AppSearchInputField placeholder="Search for patient here ..." onChangeText={(search) => searchList(search)} />
+                <TouchableOpacity onPress={() => props.navigation.navigate('ListPatients')}>
+                    <AppSearchInputField editable={false} placeholder="Search for patient here ..." />
+                </TouchableOpacity>
 
                 <Text style={styles.tinyText}>Recent activities</Text>
 
@@ -97,7 +99,7 @@ function AppHome(props) {
                         <View>
                             <View style={[styles.activityView, styles.activityRow]}>
                                 <View style={styles.activityColumnOne}>
-                                    {item.item.image === undefined ?
+                                    {item.item.image === undefined || item.item.image === null ?
                                         <Image
                                             source={require("../assets/patient-1.png")}
                                             style={styles.uploadAvatar}

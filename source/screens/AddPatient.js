@@ -43,7 +43,7 @@ function AddPatient(props) {
         });
 
         if (result.uri !== undefined) {
-            setAvatar(encode(result.uri));
+            setAvatar(result.uri);
 
 
             // RNImgToBase64.getBase64String(result.uri)
@@ -85,8 +85,9 @@ function AddPatient(props) {
             addPatient(avatar, firstname, lastname, gender, dob, allergies, conditions)
                 .then(
                     (result) => {
-                        Alert.alert("Successful", "Patient added sucessfully");
-                        props.navigation.navigate("AppHome");
+                        Alert.alert("Successful", "Patient added sucessfully", [
+                            { text: 'OK', onPress: props.navigation.navigate("PatientDetails", { residentID: result._id }) }
+                        ]);
                     }
                 )
                 .catch(function (error) {
