@@ -20,7 +20,7 @@ function UpdateTestResult(props) {
 
 
     const updateTest = (e) => {
-        if (!systolic_pressure || !diastolic_pressure || !heartbeat || !respiratory_rate || !blood_oxygen || !notes) {
+        if (!systolic_pressure && !diastolic_pressure && !heartbeat && !respiratory_rate && !blood_oxygen && !notes) {
             Alert.alert("Warning!", "You missed a record. You need to enter a value for all fields");
         }
         else {

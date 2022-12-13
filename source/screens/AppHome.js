@@ -72,7 +72,7 @@ function AppHome(props) {
             <View style={styles.top}>
                 <View style={styles.topRow}>
                     <View style={styles.topColumnOne}>
-                        <Text style={styles.intro}>Hi John,</Text>
+                        <Text style={styles.intro}>Hi Clinton,</Text>
                         <Text style={[styles.caption, styles.captionTop]}>Keep taking</Text>
                         <Text style={styles.caption}>care of your health</Text>
                     </View>

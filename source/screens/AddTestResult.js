@@ -9,15 +9,15 @@ import { AppTextInput } from '../components/AppInputField';
 function AddTestResult(props) {
     const route = useRoute();
     const residentID = route.params.residentID;
-    let [systolic_pressure, setSystolicPressure] = useState('');
-    let [diastolic_pressure, setDiastolicPressure] = useState('');
-    let [heartbeat, setHeartBeat] = useState('');
-    let [respiratory_rate, setRespiratoryRate] = useState('');
-    let [blood_oxygen, setBloodOxygen] = useState('');
-    let [notes, setNotes] = useState('');
+    let [systolic_pressure, setSystolicPressure] = useState();
+    let [diastolic_pressure, setDiastolicPressure] = useState();
+    let [heartbeat, setHeartBeat] = useState();
+    let [respiratory_rate, setRespiratoryRate] = useState();
+    let [blood_oxygen, setBloodOxygen] = useState();
+    let [notes, setNotes] = useState();
 
     let createTestRecord = (e) => {
-        if (!systolic_pressure || !diastolic_pressure || !heartbeat || !respiratory_rate || !blood_oxygen || !notes) {
+        if (!systolic_pressure && !diastolic_pressure && !heartbeat && !respiratory_rate && !blood_oxygen && !notes) {
             Alert.alert("Warning!", "You missed a record. You need to enter a value for all fields");
         }
         else {

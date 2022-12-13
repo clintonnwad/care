@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 
 function HealthStatus(props) {
     return (
-        <View style={props.status == "NORMAL" ? [styles.indicator, styles.normal]
+        <View style={props.status == "EMERGENCY" ? [styles.indicator, styles.danger]
             :
             props.status == "NEEDS_MONITORING" ?
-                [styles.indicator, { backgroundColor: 'orange' }]
+                [styles.indicator, styles.warning]
                 :
-                [styles.indicator, { backgroundColor: 'red' }]
+                [styles.indicator, styles.normal]
         }>
         </View>
     );
@@ -25,9 +25,12 @@ const styles = StyleSheet.create({
     },
     normal: {
         backgroundColor: '#5CB85C',
-    }
+    },
+    danger: {
+        backgroundColor: 'red',
+    },
+    warning: {
+        backgroundColor: 'orange',
+    },
 
 })
-
-
-1 === '1'

@@ -93,15 +93,20 @@ export async function getPatientByName(query) {
 
 export async function addTestResult(residentID, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
     let headers = await getHeaders();
-    let response = await axios.post(`${baseUrl}/patients/${residentID}/tests`, {
+    let obj = JSON.stringify({
         systolic_pressure: systolic_pressure,
         diastolic_pressure: diastolic_pressure,
         heartbeat: heartbeat,
         respiratory_rate: respiratory_rate,
         blood_oxygen: blood_oxygen,
         notes: notes
-    }, { headers: headers })
+    });
 
+    obj = JSON.parse(obj)
+
+    let response = await axios.post(`${baseUrl}/patients/${residentID}/tests`, obj, { headers: headers })
+
+    JSON.parse(JSON.stringify({ 'name': undefined }))
     return response.data;
 }
 
@@ -115,15 +120,20 @@ export async function getPatientDetails(residentID) {
 
 export async function updatePatientTestResult(residentID, testRecordId, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
     let headers = await getHeaders();
-    let response = await axios.put(`${baseUrl}/patients/${residentID}/tests/${testRecordId}`, {
+    let obj = JSON.stringify({
         systolic_pressure: systolic_pressure,
         diastolic_pressure: diastolic_pressure,
         heartbeat: heartbeat,
         respiratory_rate: respiratory_rate,
         blood_oxygen: blood_oxygen,
         notes: notes
-    }, { headers: headers })
+    });
 
+    obj = JSON.parse(obj)
+
+    let response = await axios.put(`${baseUrl}/patients/${residentID}/tests/${testRecordId}`, obj, { headers: headers })
+
+    JSON.parse(JSON.stringify({ 'name': undefined }))
     return response.data;
 }
 
