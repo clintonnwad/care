@@ -7,13 +7,14 @@ import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableO
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
+import HealthStatus from '../components/HealthStatus';
 import { calcNumYears, stringifyDate } from '../components/MomentStringify';
 
 function ListPatients(props) {
     let [isLoading, setIsLoading] = useState(true);
-    let [error, setError] = useState();
     let [response, setResponse] = useState([]);
     let [searchTerm, setSearchTerm] = useState();
+    let [filter, setFilter] = useState(false);
     const isFocused = useIsFocused();
 
     // For Search on change text
@@ -28,7 +29,7 @@ function ListPatients(props) {
 
         setResponse(newList);
 
-    }, []);
+    }, [response]);
 
     // Fetch list of all patients from api
     useEffect(() => {
@@ -71,6 +72,7 @@ function ListPatients(props) {
 
         const emergencyList = tmpList.filter(tmpList => tmpList.health_status == 'EMERGENCY' || tmpList.health_status == 'NEEDS_MONITORING');
 
+        setFilter(true);
         setResponse(emergencyList);
 
     }, [response]);
@@ -122,7 +124,16 @@ function ListPatients(props) {
 
                                     </View>
                                     <View style={styles.activityColumnTwo}>
-                                        <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                                            <View>
+                                                <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                            </View>
+                                            {filter === true ?
+                                                <HealthStatus status={item.item.health_status} />
+                                                :
+                                                <></>
+                                            }
+                                        </View>
                                         <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
                                         <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
                                     </View>

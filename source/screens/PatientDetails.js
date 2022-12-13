@@ -4,6 +4,7 @@ import { ActivityIndicator, Alert, FlatList, Image, ScrollView, StyleSheet, Text
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { deleteTestRecord, getPatientDetails } from '../api/api';
+import HealthStatus from '../components/HealthStatus';
 import { calcNumYears, stringifyDate, stringifyDateLong } from '../components/MomentStringify';
 
 function PatientDetails(props) {
@@ -114,7 +115,11 @@ function PatientDetails(props) {
                                     <View style={styles.topSegmentOneColumnSecond}>
                                         {(
                                             <View>
-                                                <Text style={{ fontSize: 22, color: '#FFFFFF', marginTop: 6, fontWeight: '600' }}>{response?.first_name + ' ' + response?.last_name} </Text>
+                                                <View style={{ flexDirection: 'row', marginTop: 6 }}>
+                                                    <Text style={{ fontSize: 22, color: '#FFFFFF', fontWeight: '600' }}>{response?.first_name + ' ' + response?.last_name} </Text>
+                                                    <HealthStatus status={response.health_status} />
+                                                </View>
+
                                                 <Text style={{ fontSize: 16, color: '#FFFFFF', marginTop: 3 }}>{calcNumYears(response.dob) + ' old - ' + response.gender}</Text>
                                                 <Text style={{ fontSize: 13, color: '#5298EB', marginTop: 3 }}>Joined {stringifyDate(response.createdAt)}</Text>
                                             </View>
@@ -224,9 +229,12 @@ function PatientDetails(props) {
                                         <Swipeable renderRightActions={() => rightSwipe(item.item._id, residentID)}>
                                             <TouchableOpacity
                                                 style={
-                                                    item.item.status == 'EMERGENCY' ?
-                                                        [styles.resultsCard, styles.danger] :
+                                                    item.item.status == 'NORMAL' ?
                                                         [styles.resultsCard, styles.safe]
+                                                        :
+                                                        item.item.status === 'NEEDS_MONITORING' ?
+                                                            [styles.resultsCard, styles.warning] :
+                                                            [styles.resultsCard, styles.danger]
                                                 }
                                                 onPress={() => props.navigation.navigate('UpdateTestResult', { testRecord: item.item, residentID: residentID })}>
                                                 <Text style={{ color: '#fff', fontSize: 12, color: '#798083' }}>{stringifyDateLong(item.item.createdAt)}</Text>
@@ -393,6 +401,10 @@ const styles = StyleSheet.create({
     },
     danger: {
         borderLeftColor: '#BF4C4C',
+        borderLeftWidth: 5,
+    },
+    warning: {
+        borderLeftColor: 'orange',
         borderLeftWidth: 5,
     },
     horizontalLine: {
