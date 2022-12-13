@@ -65,7 +65,7 @@ export async function addPatient(avatar, firstname, lastname, gender, dob, aller
         firstname: firstname,
         lastname: lastname,
         gender: gender,
-        dob: dob + "T17:08:13.930Z",
+        dob: dob,
         allergies: allergies,
         conditions: conditions
     }, { headers: headers })
@@ -93,15 +93,20 @@ export async function getPatientByName(query) {
 
 export async function addTestResult(residentID, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
     let headers = await getHeaders();
-    let response = await axios.post(`${baseUrl}/patients/${residentID}/tests`, {
+    let obj = JSON.stringify({
         systolic_pressure: systolic_pressure,
         diastolic_pressure: diastolic_pressure,
         heartbeat: heartbeat,
         respiratory_rate: respiratory_rate,
         blood_oxygen: blood_oxygen,
         notes: notes
-    }, { headers: headers })
+    });
 
+    obj = JSON.parse(obj)
+
+    let response = await axios.post(`${baseUrl}/patients/${residentID}/tests`, obj, { headers: headers })
+
+    JSON.parse(JSON.stringify({ 'name': undefined }))
     return response.data;
 }
 
@@ -115,15 +120,20 @@ export async function getPatientDetails(residentID) {
 
 export async function updatePatientTestResult(residentID, testRecordId, systolic_pressure, diastolic_pressure, heartbeat, respiratory_rate, blood_oxygen, notes) {
     let headers = await getHeaders();
-    let response = await axios.put(`${baseUrl}/patients/${residentID}/tests/${testRecordId}`, {
+    let obj = JSON.stringify({
         systolic_pressure: systolic_pressure,
         diastolic_pressure: diastolic_pressure,
         heartbeat: heartbeat,
         respiratory_rate: respiratory_rate,
         blood_oxygen: blood_oxygen,
         notes: notes
-    }, { headers: headers })
+    });
 
+    obj = JSON.parse(obj)
+
+    let response = await axios.put(`${baseUrl}/patients/${residentID}/tests/${testRecordId}`, obj, { headers: headers })
+
+    JSON.parse(JSON.stringify({ 'name': undefined }))
     return response.data;
 }
 
@@ -134,16 +144,19 @@ export async function deleteTestRecord(recordID, residentID) {
 
 }
 
-export async function updatePatient(residentID, firstname, lastname, gender, dob, allergies, conditions) {
+export async function updatePatient(residentID, avatar, firstname, lastname, gender, dob, allergies, conditions) {
     let headers = await getHeaders();
     let response = await axios.put(`${baseUrl}/patients/${residentID}`, {
-        firstname: firstname,
-        lastname: lastname,
+        avatar: avatar,
+        first_name: firstname,
+        last_name: lastname,
         gender: gender,
-        dob: dob + "T17:08:13.930Z",
+        dob: dob,
         allergies: allergies,
         conditions: conditions
     }, { headers: headers })
 
     return response.data;
+
+    // console.log(residentID);
 }

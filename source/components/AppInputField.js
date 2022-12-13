@@ -2,8 +2,14 @@ import React from 'react';
 import { Alert, Platform, StyleSheet, TextInput, Touchable, View } from 'react-native';
 
 export function AppTextInput({ ...otherProps }) {
+
+    if (otherProps.defaultValue == 'undefined') {
+        otherProps.defaultValue = undefined
+    }
+
     return (
         <View style={[styles.container, styles.shadowProp]}>
+
             <TextInput
                 style={styles.textInput}
                 {...otherProps}

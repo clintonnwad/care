@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import Moment from 'moment';
 import { React, useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -7,13 +7,15 @@ import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableO
 import { getAllPatients } from '../api/api';
 import AppSearchInputField from '../components/AppSearchInputField';
 import CustomBottomNav from '../components/CustomBottomNav';
+import HealthStatus from '../components/HealthStatus';
 import { calcNumYears, stringifyDate } from '../components/MomentStringify';
 
 function ListPatients(props) {
     let [isLoading, setIsLoading] = useState(true);
-    let [error, setError] = useState();
     let [response, setResponse] = useState([]);
     let [searchTerm, setSearchTerm] = useState();
+    let [filter, setFilter] = useState(false);
+    const isFocused = useIsFocused();
 
     // For Search on change text
     const searchList = useCallback((text) => {
@@ -62,7 +64,7 @@ function ListPatients(props) {
                     );
                 }
             });
-    }, []);
+    }, [props, isFocused]);
 
     // Filter Emergency
     const filterEmergency = useCallback(() => {
@@ -70,6 +72,7 @@ function ListPatients(props) {
 
         const emergencyList = tmpList.filter(tmpList => tmpList.health_status == 'EMERGENCY' || tmpList.health_status == 'NEEDS_MONITORING');
 
+        setFilter(true);
         setResponse(emergencyList);
 
     }, [response]);
@@ -113,10 +116,24 @@ function ListPatients(props) {
                             <TouchableOpacity onPress={() => props.navigation.navigate('PatientDetails', { residentID: item.item._id })}>
                                 <View style={[styles.listItem, styles.activityRow]}>
                                     <View style={styles.activityColumnOne}>
-                                        <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                        {item.item.avatar !== undefined ?
+                                            <Image source={{ uri: item.item.avatar }} style={styles.activityAvatar} />
+                                            :
+                                            <Image source={require('../assets/patient-1.png')} style={styles.activityAvatar} />
+                                        }
+
                                     </View>
                                     <View style={styles.activityColumnTwo}>
-                                        <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                                            <View>
+                                                <Text style={styles.activityDescOne}>{item.item.first_name + ' ' + item.item.last_name}</Text>
+                                            </View>
+                                            {filter === true ?
+                                                <HealthStatus status={item.item.health_status} />
+                                                :
+                                                <></>
+                                            }
+                                        </View>
                                         <Text style={styles.activityDescTwo}>{calcNumYears(item.item.dob) + ' old - ' + item.item.gender}</Text>
                                         <Text style={styles.activityDescThree}>Joined {stringifyDate(item.item.createdAt)}</Text>
                                     </View>

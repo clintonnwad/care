@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#FFFFFF',
         borderTopRightRadius: 20,
-        fontSize: 20
+        fontSize: 20,
     },
     linearGradient: {
         borderRadius: 20,
